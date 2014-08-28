@@ -1,2 +1,2 @@
-vietngumn-gradeapp
+vietngumn-schoolapp
 ==================
