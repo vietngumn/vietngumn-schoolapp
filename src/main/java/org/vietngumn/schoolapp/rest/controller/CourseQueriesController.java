@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.vietngumn.schoolapp.event.course.CourseDetails;
-import org.vietngumn.schoolapp.event.course.ReadCourseRequest;
-import org.vietngumn.schoolapp.event.course.ReadCourseResponse;
+import org.vietngumn.schoolapp.event.course.CourseDTO;
+import org.vietngumn.schoolapp.event.course.ReadCourse;
+import org.vietngumn.schoolapp.event.course.ReadCourseCommand;
+import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
 import org.vietngumn.schoolapp.rest.domain.Course;
+import org.vietngumn.schoolapp.rest.domain.CourseWorkCategory;
 import org.vietngumn.schoolapp.service.CourseService;
 
 @Controller
@@ -42,18 +44,29 @@ public class CourseQueriesController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{courseId}")
     public ResponseEntity<Course> readCourse(@PathVariable String courseId) {
-    	ReadCourseRequest request = new ReadCourseRequest(courseId);
-        ReadCourseResponse response = courseService.readCourse(request);
+    	ReadCourseCommand request = new ReadCourseCommand(courseId);
+        ReadCourse response = courseService.readCourse(request);
 
         if (!response.isEntityFound()) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
         }
 
-        CourseDetails courseDetails = response.getCourseDetails();
+        CourseDTO courseDetails = response.getCourseDetails();
     	Course course = new Course();
     	course.setCourseId(courseDetails.getCourseId());
     	course.setCourseName(courseDetails.getCourseName());
-        
+    	
+    	List<CourseWorkCategoryDTO> courseWorkDetails = courseDetails.getCourseWorkCategories();
+    	if (courseWorkDetails != null) {
+    		for (CourseWorkCategoryDTO details : courseWorkDetails) {
+    			CourseWorkCategory category = new CourseWorkCategory();
+    			category.setCategoryId(details.getCategoryId());
+    			category.setName(details.getName());
+    			category.setDescription(details.getDescription());
+    			course.addCourseWorkCategory(category);
+    		}
+    	}
+    	
         return new ResponseEntity<Course>(course, HttpStatus.OK);
     }
 

@@ -4,11 +4,11 @@ import org.vietngumn.schoolapp.event.course.*;
 
 public interface CourseService {
 
-	CreateCourseResponse createCourse(CreateCourseRequest event);
+	CreatedCourse createCourse(CreateCourseCommand event);
 
-	ReadCourseResponse readCourse(ReadCourseRequest readCourseRequest);
+	ReadCourse readCourse(ReadCourseCommand readCourseRequest);
 
-	UpdateCourseResponse updateCourse(UpdateCourseRequest updateCourseRequest);
+	UpdatedCourse updateCourse(UpdateCourseCommand updateCourseRequest);
 
-	DeleteCourseResponse deleteCourse(DeleteCourseRequest deleteCourseRequest);
+	DeletedCourse deleteCourse(DeleteCourseCommand deleteCourseRequest);
 }

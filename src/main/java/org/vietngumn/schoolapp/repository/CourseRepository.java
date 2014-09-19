@@ -1,7 +1,5 @@
 package org.vietngumn.schoolapp.repository;
 
-import java.math.BigInteger;
-
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.vietngumn.schoolapp.domain.Course;
 
@@ -10,7 +8,7 @@ import org.vietngumn.schoolapp.domain.Course;
 * 
 * @author Steve Nguyen
 */
-public interface CourseRepository extends PagingAndSortingRepository<Course, BigInteger> {
+public interface CourseRepository extends PagingAndSortingRepository<Course, String> {
 
 	Course findByCourseId(String id);
 	

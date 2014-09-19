@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.vietngumn.schoolapp.event.course.CourseDetails;
-import org.vietngumn.schoolapp.event.course.CreateCourseRequest;
-import org.vietngumn.schoolapp.event.course.CreateCourseResponse;
-import org.vietngumn.schoolapp.event.course.DeleteCourseRequest;
-import org.vietngumn.schoolapp.event.course.DeleteCourseResponse;
-import org.vietngumn.schoolapp.event.course.UpdateCourseRequest;
-import org.vietngumn.schoolapp.event.course.UpdateCourseResponse;
+import org.vietngumn.schoolapp.event.course.CourseDTO;
+import org.vietngumn.schoolapp.event.course.CreateCourseCommand;
+import org.vietngumn.schoolapp.event.course.CreatedCourse;
+import org.vietngumn.schoolapp.event.course.DeleteCourseCommand;
+import org.vietngumn.schoolapp.event.course.DeletedCourse;
+import org.vietngumn.schoolapp.event.course.UpdateCourseCommand;
+import org.vietngumn.schoolapp.event.course.UpdatedCourse;
 import org.vietngumn.schoolapp.rest.domain.Course;
 import org.vietngumn.schoolapp.service.CourseService;
+import org.vietngumn.schoolapp.service.CourseWorkService;
 
 @Controller
 @RequestMapping("/aggregators/courses")
@@ -30,11 +31,14 @@ public class CourseCommandsController {
 
     @Autowired
     private CourseService courseService;
+    
+    @Autowired
+    private CourseWorkService courseWorkService;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Course> createCourse(@RequestBody Course course, UriComponentsBuilder builder) {
 
-    	CreateCourseResponse courseCreated = courseService.createCourse(new CreateCourseRequest(course.toCourseDetails()));
+    	CreatedCourse courseCreated = courseService.createCourse(new CreateCourseCommand(course.toCourseDetails()));
 
     	Course newCourse = Course.fromCourseDetails(courseCreated.getCourseDetails());
 
@@ -48,10 +52,10 @@ public class CourseCommandsController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable String courseId, @RequestBody Course course) {
-    	CourseDetails courseDetails = course.toCourseDetails();
-    	UpdateCourseRequest updateRequest = new UpdateCourseRequest(courseId, courseDetails);
+    	CourseDTO courseDetails = course.toCourseDetails();
+    	UpdateCourseCommand updateRequest = new UpdateCourseCommand(courseId, courseDetails);
     	
-    	UpdateCourseResponse updateResponse = courseService.updateCourse(updateRequest);
+    	UpdatedCourse updateResponse = courseService.updateCourse(updateRequest);
 
         if (!updateResponse.isEntityFound()) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
@@ -69,8 +73,8 @@ public class CourseCommandsController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{courseId}")
     public ResponseEntity<Course> deleteCourse(@PathVariable String courseId) {
 
-    	DeleteCourseRequest deleteRequest = new DeleteCourseRequest(courseId);
-    	DeleteCourseResponse deleteResponse = courseService.deleteCourse(deleteRequest);
+    	DeleteCourseCommand deleteRequest = new DeleteCourseCommand(courseId);
+    	DeletedCourse deleteResponse = courseService.deleteCourse(deleteRequest);
 
         if (!deleteResponse.isEntityFound()) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
@@ -84,5 +88,4 @@ public class CourseCommandsController {
 
         return new ResponseEntity<Course>(course, HttpStatus.FORBIDDEN);
     }
-
 }

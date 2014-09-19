@@ -15,16 +15,17 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.vietngumn.schoolapp.domain.Course;
-import org.vietngumn.schoolapp.event.course.CourseDetails;
-import org.vietngumn.schoolapp.event.course.CreateCourseRequest;
-import org.vietngumn.schoolapp.event.course.CreateCourseResponse;
-import org.vietngumn.schoolapp.event.course.DeleteCourseRequest;
-import org.vietngumn.schoolapp.event.course.DeleteCourseResponse;
-import org.vietngumn.schoolapp.event.course.ReadCourseRequest;
-import org.vietngumn.schoolapp.event.course.ReadCourseResponse;
-import org.vietngumn.schoolapp.event.course.UpdateCourseRequest;
-import org.vietngumn.schoolapp.event.course.UpdateCourseResponse;
+import org.vietngumn.schoolapp.event.course.CourseDTO;
+import org.vietngumn.schoolapp.event.course.CreateCourseCommand;
+import org.vietngumn.schoolapp.event.course.CreatedCourse;
+import org.vietngumn.schoolapp.event.course.DeleteCourseCommand;
+import org.vietngumn.schoolapp.event.course.DeletedCourse;
+import org.vietngumn.schoolapp.event.course.ReadCourseCommand;
+import org.vietngumn.schoolapp.event.course.ReadCourse;
+import org.vietngumn.schoolapp.event.course.UpdateCourseCommand;
+import org.vietngumn.schoolapp.event.course.UpdatedCourse;
 import org.vietngumn.schoolapp.repository.CourseRepository;
+import org.vietngumn.schoolapp.service.CourseServiceImpl;
 
 public class CourseServiceImplTest {
 
@@ -43,10 +44,10 @@ public class CourseServiceImplTest {
 	public void createCourse() {
 		String courseId = "courseId";
 		String courseName = "courseName";
-		CourseDetails courseDetails = new CourseDetails();
+		CourseDTO courseDetails = new CourseDTO();
 		courseDetails.setCourseId(courseId);
 		courseDetails.setCourseName(courseName);
-		CreateCourseRequest createRequest = new CreateCourseRequest(courseDetails);
+		CreateCourseCommand createRequest = new CreateCourseCommand(courseDetails);
 
 		Course course = new Course();
 		course.setCourseId(courseId);
@@ -55,7 +56,7 @@ public class CourseServiceImplTest {
 		ArgumentCaptor<Course> argumentCaptor = ArgumentCaptor.forClass(Course.class);
 		when(mockCourseRepository.save(argumentCaptor.capture())).thenReturn(course);
 
-		CreateCourseResponse createResponse = courseService.createCourse(createRequest);
+		CreatedCourse createResponse = courseService.createCourse(createRequest);
 
 		verify(mockCourseRepository).save(any(Course.class));
 		verifyNoMoreInteractions(mockCourseRepository);
@@ -74,11 +75,11 @@ public class CourseServiceImplTest {
 		Course course = new Course();
 		course.setCourseId(courseId);
 		course.setCourseName("courseName");
-		ReadCourseRequest readRequest = new ReadCourseRequest(courseId);
+		ReadCourseCommand readRequest = new ReadCourseCommand(courseId);
 
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(course);
 
-		ReadCourseResponse readResponse = courseService.readCourse(readRequest);
+		ReadCourse readResponse = courseService.readCourse(readRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 
@@ -89,11 +90,11 @@ public class CourseServiceImplTest {
 	@Test
 	public void readCourse_notFound() {
 		String courseId = "invalidCourseId";
-		ReadCourseRequest readRequest = new ReadCourseRequest(courseId);
+		ReadCourseCommand readRequest = new ReadCourseCommand(courseId);
 
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(null);
 
-		ReadCourseResponse readResponse = courseService.readCourse(readRequest);
+		ReadCourse readResponse = courseService.readCourse(readRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 
@@ -104,9 +105,9 @@ public class CourseServiceImplTest {
 	@Test
 	public void updateCourse() {
 		String courseId = "courseId";
-		CourseDetails courseDetails = new CourseDetails();
+		CourseDTO courseDetails = new CourseDTO();
 		courseDetails.setCourseName("newCourseName");
-		UpdateCourseRequest updateRequest = new UpdateCourseRequest(courseId, courseDetails);
+		UpdateCourseCommand updateRequest = new UpdateCourseCommand(courseId, courseDetails);
 
 		Course course = new Course();
 		course.setCourseId(courseId);
@@ -115,7 +116,7 @@ public class CourseServiceImplTest {
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(course);
 		when(mockCourseRepository.save(course)).thenReturn(course);
 
-		UpdateCourseResponse updateResponse = courseService.updateCourse(updateRequest);
+		UpdatedCourse updateResponse = courseService.updateCourse(updateRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 		verify(mockCourseRepository).save(any(Course.class));
@@ -129,13 +130,13 @@ public class CourseServiceImplTest {
 	@Test
 	public void updateCourse_notFound() {
 		String courseId = "invalidCourseId";
-		CourseDetails courseDetails = new CourseDetails();
+		CourseDTO courseDetails = new CourseDTO();
 		courseDetails.setCourseName("newCourseName");
-		UpdateCourseRequest updateRequest = new UpdateCourseRequest(courseId, courseDetails);
+		UpdateCourseCommand updateRequest = new UpdateCourseCommand(courseId, courseDetails);
 
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(null);
 
-		UpdateCourseResponse updateResponse = courseService.updateCourse(updateRequest);
+		UpdatedCourse updateResponse = courseService.updateCourse(updateRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 
@@ -146,7 +147,7 @@ public class CourseServiceImplTest {
 	@Test
 	public void deleteCourse() {
 		String courseId = "courseId";
-		DeleteCourseRequest deleteRequest = new DeleteCourseRequest(courseId);
+		DeleteCourseCommand deleteRequest = new DeleteCourseCommand(courseId);
 
 		Course course = new Course();
 		course.setCourseId(courseId);
@@ -154,7 +155,7 @@ public class CourseServiceImplTest {
 
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(course);
 
-		DeleteCourseResponse deleteResponse = courseService.deleteCourse(deleteRequest);
+		DeletedCourse deleteResponse = courseService.deleteCourse(deleteRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 		verify(mockCourseRepository).delete(course);
@@ -168,11 +169,11 @@ public class CourseServiceImplTest {
 	@Test
 	public void deleteCourse_notFound() {
 		String courseId = "courseId";
-		DeleteCourseRequest deleteRequest = new DeleteCourseRequest(courseId);
+		DeleteCourseCommand deleteRequest = new DeleteCourseCommand(courseId);
 
 		when(mockCourseRepository.findByCourseId(courseId)).thenReturn(null);
 
-		DeleteCourseResponse deleteResponse = courseService.deleteCourse(deleteRequest);
+		DeletedCourse deleteResponse = courseService.deleteCourse(deleteRequest);
 
 		verify(mockCourseRepository).findByCourseId(courseId);
 		verify(mockCourseRepository, Mockito.never()).delete(any(Course.class));

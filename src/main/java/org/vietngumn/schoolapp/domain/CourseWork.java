@@ -6,19 +6,42 @@ import org.vietngumn.schoolapp.event.courseWork.CourseWorkDetails;
 public class CourseWork {
 
 	private String courseWorkId;
-	private Course course;
+//	private Course course;
 	private String name;
 	private String description;
 	private String gradeType; //enum type: point, letter grade
 	private String category; //enum type: exam, homework, attendance, extra credit
 	
+	public CourseWork() {
 
+	}
+	
 	public CourseWork(String courseWorkId) {
 		this.courseWorkId = courseWorkId;
 	}
 
 	public String getCourseWorkId() {
 		return this.courseWorkId;
+	}
+
+	public void setCourseWorkId(String courseWorkId) {
+		this.courseWorkId = courseWorkId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public CourseWorkDetails toCourseWorkDetails() {
@@ -35,13 +58,13 @@ public class CourseWork {
 		return courseWork;
 	}
 
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+//	public Course getCourse() {
+//		return course;
+//	}
+//
+//	public void setCourse(Course course) {
+//		this.course = course;
+//	}
 
 	public boolean canBeDeleted() {
 		return true;
