@@ -3,13 +3,13 @@ package org.vietngumn.schoolapp.event.courseWork;
 import org.vietngumn.schoolapp.event.CreateCommand;
 
 public class CreateCourseWorkCommand extends CreateCommand {
-	private CourseWorkDetails details;
+	private CourseWorkDTO details;
 
-	public CreateCourseWorkCommand(CourseWorkDetails details) {
-		this.details = details;
+	public CreateCourseWorkCommand(CourseWorkDTO workDTO) {
+		this.details = workDTO;
 	}
 
-	public CourseWorkDetails getDetails() {
+	public CourseWorkDTO getDetails() {
 		return details;
 	}
 	

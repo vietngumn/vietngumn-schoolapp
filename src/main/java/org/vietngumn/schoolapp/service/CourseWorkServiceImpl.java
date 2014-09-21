@@ -4,16 +4,17 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vietngumn.schoolapp.domain.Course;
+import org.vietngumn.schoolapp.domain.CourseWork;
 import org.vietngumn.schoolapp.domain.CourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
-import org.vietngumn.schoolapp.event.courseWorkCategory.CreateCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.CreatedCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.DeleteCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.DeletedCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.UpdateCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.UpdatedCourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.event.courseWork.CreateCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.CreatedCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.DeleteCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.DeletedCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.UpdateCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.UpdatedCourseWork;
 import org.vietngumn.schoolapp.repository.CourseRepository;
 
 @Service
@@ -27,72 +28,79 @@ public class CourseWorkServiceImpl implements CourseWorkService {
 	}
 	
 	@Override
-	public CreatedCourseWorkCategory createCourseWorkCategory(CreateCourseWorkCategoryCommand createCommand) {
-		CourseWorkCategoryDTO categoryDTO = createCommand.getDetails();
-		Course course = courseRepository.findByCourseId(categoryDTO.getCourseId());
-//		if (course == null) {
-//			return CreatedCourseWorkCategory.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
-//		}
-		String categoryId = new ObjectId().toString();
-		CourseWorkCategory category = CourseWorkCategory.fromCourseWorkCategoryDTO(categoryDTO);
-		category.setCategoryId(categoryId);
-		course.addCourseWorkCategory(category);
+	public CreatedCourseWork createCourseWork(CreateCourseWorkCommand createCommand) {
+		CourseWorkDTO workDTO = createCommand.getDetails();
+		Course course = courseRepository.findByCourseId(workDTO.getCourseId());
+
+		CourseWorkCategory category = course.getCourseWorkCategory(workDTO.getCategoryId());
+		
+		String workId = new ObjectId().toString();
+		CourseWork work = CourseWork.fromCourseWorkDTO(workDTO);
+		work.setWorkId(workId);
+		category.addCourseWork(work);
 		
 		course = courseRepository.save(course);
-		return new CreatedCourseWorkCategory(categoryId, category.toCourseWorkCategoryDTO());
+		return new CreatedCourseWork(workId, work.toCourseWorkDTO());
 	}
 	
 	@Override
-	public ReadCourseWorkCategory readCourseWorkCategory(ReadCourseWorkCategoryCommand readCommand) {
+	public ReadCourseWork readCourseWork(ReadCourseWorkCommand readCommand) {
 
 		Course course = courseRepository.findByCourseId(readCommand.getCourseId());
 		if (course == null) {
-			return ReadCourseWorkCategory.notFound(readCommand.getCourseId(), readCommand.getCategoryId());
+			return ReadCourseWork.notFound(readCommand.getCourseId(), readCommand.getCategoryId(), readCommand.getWorkId());
 		}
 
 		CourseWorkCategory category = course.getCourseWorkCategory(readCommand.getCategoryId());
-		if (category == null) {
-			return ReadCourseWorkCategory.notFound(readCommand.getCourseId(), readCommand.getCategoryId());
+		
+		CourseWork work = category.getCourseWork(readCommand.getWorkId());
+		if (work == null) {
+			return ReadCourseWork.notFound(readCommand.getCourseId(), readCommand.getCategoryId(), readCommand.getWorkId());
 		}
 		
-		return new ReadCourseWorkCategory(readCommand.getCourseId(), readCommand.getCategoryId(), category.toCourseWorkCategoryDTO());
+		return new ReadCourseWork(readCommand.getCourseId(), readCommand.getCategoryId(), readCommand.getWorkId(), work.toCourseWorkDTO());
 	}
 
-
 	@Override
-	public UpdatedCourseWorkCategory updateCourseWorkCategory(UpdateCourseWorkCategoryCommand updateCommand) {
-		CourseWorkCategoryDTO categoryDTO = updateCommand.getDetails();
-		Course course = courseRepository.findByCourseId(categoryDTO.getCourseId());
+	public UpdatedCourseWork updateCourseWork(UpdateCourseWorkCommand updateCommand) {
+		CourseWorkDTO workDTO = updateCommand.getDetails();
+		
+		Course course = courseRepository.findByCourseId(workDTO.getCourseId());
 //		if (course == null) {
-//			return CreatedCourseWorkCategory.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
+//			return CreatedCourseWork.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
 //		}
 		
-		CourseWorkCategory category = CourseWorkCategory.fromCourseWorkCategoryDTO(categoryDTO);
-		category.setCategoryId(updateCommand.getCategoryId());
+		CourseWorkCategory category = course.getCourseWorkCategory(workDTO.getCategoryId());
 		
-		CourseWorkCategory updatedCategory = course.updateCourseWorkCategory(category);
+		CourseWork work = CourseWork.fromCourseWorkDTO(workDTO);
+		work.setWorkId(updateCommand.getWorkId());
+		
+		CourseWork updatedWork = category.updateCourseWork(work);
 //		if (updatedCategory == null) {
-//		return UpdatedCourseWorkCategory.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
+//		return UpdatedCourseWork.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
 //	}
 		
 		course = courseRepository.save(course);
-		return new UpdatedCourseWorkCategory(updateCommand.getCategoryId(), updatedCategory.toCourseWorkCategoryDTO());
+		return new UpdatedCourseWork(updateCommand.getWorkId(), updatedWork.toCourseWorkDTO());
 	}
 
 	@Override
-	public DeletedCourseWorkCategory deleteCourseWorkCategory(DeleteCourseWorkCategoryCommand deleteCommand) {
+	public DeletedCourseWork deleteCourseWork(DeleteCourseWorkCommand deleteCommand) {
 		Course course = courseRepository.findByCourseId(deleteCommand.getCourseId());
 		if (course == null) {
-			return DeletedCourseWorkCategory.notFound(deleteCommand.getCourseId(), deleteCommand.getCategoryId());
+			return DeletedCourseWork.notFound(deleteCommand.getCourseId(), deleteCommand.getCategoryId(), deleteCommand.getWorkId());
 		}
 
-		CourseWorkCategory category = course.deleteCourseWorkCategory(deleteCommand.getCategoryId());
-		if (category == null) {
-			return DeletedCourseWorkCategory.notFound(deleteCommand.getCourseId(), deleteCommand.getCategoryId());
+		CourseWorkCategory category = course.getCourseWorkCategory(deleteCommand.getCategoryId());
+		
+		CourseWork work = category.deleteCourseWork(deleteCommand.getWorkId());
+		if (work == null) {
+			return DeletedCourseWork.notFound(deleteCommand.getCourseId(), deleteCommand.getCategoryId(), deleteCommand.getWorkId());
 		}
 		
-		CourseWorkCategoryDTO details = category.toCourseWorkCategoryDTO();
 		courseRepository.save(course);
-		return new DeletedCourseWorkCategory(deleteCommand.getCourseId(), deleteCommand.getCategoryId(), details);
+		
+		CourseWorkDTO details = work.toCourseWorkDTO();
+		return new DeletedCourseWork(deleteCommand.getCourseId(), deleteCommand.getCategoryId(), deleteCommand.getWorkId(), details);
 	}
 }

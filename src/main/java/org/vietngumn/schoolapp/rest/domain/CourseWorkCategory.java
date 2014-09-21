@@ -12,19 +12,10 @@ import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
 public class CourseWorkCategory extends ResourceSupport implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String categoryId;
 	private String courseId;
+	private String categoryId;
 	private String name;
 	private String description;
-
-
-	public String getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(String categoryId) {
-		this.categoryId = categoryId;
-	}
 
 	public String getCourseId() {
 		return courseId;
@@ -32,6 +23,14 @@ public class CourseWorkCategory extends ResourceSupport implements Serializable 
 
 	public void setCourseId(String courseId) {
 		this.courseId = courseId;
+	}
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public String getName() {
@@ -52,8 +51,8 @@ public class CourseWorkCategory extends ResourceSupport implements Serializable 
 
 	public CourseWorkCategoryDTO toCourseWorkCategoryDTO() {
 		CourseWorkCategoryDTO categoryDTO = new CourseWorkCategoryDTO();
-		categoryDTO.setCategoryId(categoryId);
 		categoryDTO.setCourseId(courseId);
+		categoryDTO.setCategoryId(categoryId);
 		categoryDTO.setName(name);
 		categoryDTO.setDescription(description);
 		return categoryDTO;

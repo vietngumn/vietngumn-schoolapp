@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.rest.domain.CourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
+import org.vietngumn.schoolapp.rest.domain.CourseWork;
 import org.vietngumn.schoolapp.service.CourseWorkService;
 
 @Controller
-@RequestMapping("/aggregators/courses/{courseId}/categories")
+@RequestMapping("/aggregators/courses/{courseId}/categories/{categoryId}/works")
 public class CourseWorkQueriesController {
 
     private static Logger LOG = LoggerFactory.getLogger(CourseWorkQueriesController.class);
@@ -32,27 +32,29 @@ public class CourseWorkQueriesController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<CourseWorkCategory> getAllCourseWorkCategories(@PathVariable String courseID) {
-        List<CourseWorkCategory> categories = new ArrayList<CourseWorkCategory>();
+    public List<CourseWork> getAllCourseWorkCategories(@PathVariable String courseID) {
+        List<CourseWork> categories = new ArrayList<CourseWork>();
 //        for (CourseDetails detail : courseService.readAllCourseWorkCategories(new RequestAllOrdersEvent()).getOrdersDetails()) {
 //            orders.add(Order.fromOrderDetails(detail));
 //        }
         return categories;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{categoryId}")
-    public ResponseEntity<CourseWorkCategory> readCourseWorkCategory(@PathVariable String courseId, @PathVariable String categoryId) {
-    	ReadCourseWorkCategoryCommand readCommand = new ReadCourseWorkCategoryCommand(courseId, categoryId);
-        ReadCourseWorkCategory response = courseWorkService.readCourseWorkCategory(readCommand);
+    @RequestMapping(method = RequestMethod.GET, value = "/{workId}")
+    public ResponseEntity<CourseWork> readCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @PathVariable String workId) {
+    	ReadCourseWorkCommand readCommand = new ReadCourseWorkCommand(courseId, categoryId, workId);
+    	
+        ReadCourseWork response = courseWorkService.readCourseWork(readCommand);
 
         if (!response.isEntityFound()) {
-            return new ResponseEntity<CourseWorkCategory>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<CourseWork>(HttpStatus.NOT_FOUND);
         }
 
-        CourseWorkCategoryDTO details = response.getDetails();
+        CourseWorkDTO details = response.getDetails();
         
-        CourseWorkCategory category = CourseWorkCategory.fromCourseWorkCategoryDTO(details);
-        return new ResponseEntity<CourseWorkCategory>(category, HttpStatus.OK);
+        CourseWork work = CourseWork.fromCourseWorkDTO(details);
+        
+        return new ResponseEntity<CourseWork>(work, HttpStatus.OK);
     }
 
 }

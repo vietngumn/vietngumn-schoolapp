@@ -1,31 +1,49 @@
 package org.vietngumn.schoolapp.domain;
 
 import org.springframework.beans.BeanUtils;
-import org.vietngumn.schoolapp.event.courseWork.CourseWorkDetails;
+import org.springframework.data.annotation.Transient;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.helper.ListItem;
 
-public class CourseWork {
+public class CourseWork implements ListItem {
 
-	private String courseWorkId;
-//	private Course course;
+	@Transient
+	private String courseId;
+	@Transient
+	private String categoryId;
+	
+	private String workId;
 	private String name;
 	private String description;
-	private String gradeType; //enum type: point, letter grade
-	private String category; //enum type: exam, homework, attendance, extra credit
+	private Integer weight;
 	
-	public CourseWork() {
+	public String getCourseId() {
+		return courseId;
+	}
 
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategoryId() {
+		return this.categoryId;
 	}
 	
-	public CourseWork(String courseWorkId) {
-		this.courseWorkId = courseWorkId;
+	public String getWorkId() {
+		return workId;
+	}
+	
+	@Override
+	public String getListItemId() {
+		return getWorkId();
 	}
 
-	public String getCourseWorkId() {
-		return this.courseWorkId;
-	}
-
-	public void setCourseWorkId(String courseWorkId) {
-		this.courseWorkId = courseWorkId;
+	public void setWorkId(String workId) {
+		this.workId = workId;
 	}
 
 	public String getName() {
@@ -44,30 +62,29 @@ public class CourseWork {
 		this.description = description;
 	}
 
-	public CourseWorkDetails toCourseWorkDetails() {
-		CourseWorkDetails details = new CourseWorkDetails();
-		BeanUtils.copyProperties(this, details);
-		return details;
+	public Integer getWeight() {
+		return weight;
 	}
 
-	public static CourseWork fromCourseWorkDetails(CourseWorkDetails courseWorkDetails) {
-		CourseWork courseWork = new CourseWork(courseWorkDetails.getCourseWorkId());
-
-		BeanUtils.copyProperties(courseWorkDetails, courseWork);
-
-		return courseWork;
+	public void setWeight(Integer weight) {
+		this.weight = weight;
 	}
 
-//	public Course getCourse() {
-//		return course;
-//	}
-//
-//	public void setCourse(Course course) {
-//		this.course = course;
-//	}
-
+	
 	public boolean canBeDeleted() {
 		return true;
+	}
+
+	public CourseWorkDTO toCourseWorkDTO() {
+		CourseWorkDTO workDTO = new CourseWorkDTO();
+		BeanUtils.copyProperties(this, workDTO);
+		return workDTO;
+	}
+
+	public static CourseWork fromCourseWorkDTO(CourseWorkDTO workDTO) {
+		CourseWork work = new CourseWork();
+		BeanUtils.copyProperties(workDTO, work);
+		return work;
 	}
 
 }

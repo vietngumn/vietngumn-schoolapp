@@ -4,19 +4,19 @@ import org.vietngumn.schoolapp.event.CreatedEvent;
 
 public class CreatedCourseWork extends CreatedEvent {
 
-	private final String newCourseWorkId;
-	private final CourseWorkDetails details;
+	private final String newCreatedId;
+	private final CourseWorkDTO details;
 
-	public CreatedCourseWork(final String newCourseWorkId, final CourseWorkDetails details) {
-		this.newCourseWorkId = newCourseWorkId;
+	public CreatedCourseWork(final String newCreatedId, final CourseWorkDTO details) {
+		this.newCreatedId = newCreatedId;
 		this.details = details;
 	}
 
-	public CourseWorkDetails getDetails() {
+	public CourseWorkDTO getDetails() {
 		return details;
 	}
 
-	public String getNewCourseWorkId() {
-		return newCourseWorkId;
+	public String getNewCreatedId() {
+		return newCreatedId;
 	}
 }

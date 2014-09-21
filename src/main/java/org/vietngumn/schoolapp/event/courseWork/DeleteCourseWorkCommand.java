@@ -4,13 +4,26 @@ import org.vietngumn.schoolapp.event.DeleteCommand;
 
 public class DeleteCourseWorkCommand extends DeleteCommand {
 
-	private final String courseWorkId;
+	private final String courseId;
+	private final String categoryId;
+	private final String workId;
 
-	public DeleteCourseWorkCommand(final String courseWorkId) {
-		this.courseWorkId = courseWorkId;
+	public DeleteCourseWorkCommand(final String courseId, final String categoryId, final String workId) {
+		this.courseId = courseId;
+		this.categoryId = categoryId;
+		this.workId = workId;
 	}
 
-	public String getCourseWorkId() {
-		return this.courseWorkId;
+	public String getCourseId() {
+		return courseId;
 	}
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public String getWorkId() {
+		return workId;
+	}
+	
 }

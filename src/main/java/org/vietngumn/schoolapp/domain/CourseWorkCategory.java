@@ -1,10 +1,16 @@
 package org.vietngumn.schoolapp.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
+import org.vietngumn.schoolapp.helper.ListItem;
+import org.vietngumn.schoolapp.helper.ListItemsCrudHelper;
 
-public class CourseWorkCategory {
+public class CourseWorkCategory implements ListItem {
 
 	@Transient
 	private String courseId;
@@ -12,6 +18,10 @@ public class CourseWorkCategory {
 	private String name;
 	private String description;
 	private Integer weight;
+	
+	@Transient
+	private ListItemsCrudHelper<CourseWork> courseWorksCrudHelper;
+	private List<CourseWork> courseWorks = new ArrayList<CourseWork>();
 	
 	public String getCourseId() {
 		return courseId;
@@ -27,6 +37,11 @@ public class CourseWorkCategory {
 
 	public String getCategoryId() {
 		return this.categoryId;
+	}
+	
+	@Override
+	public String getListItemId() {
+		return getCategoryId();
 	}
 
 	public String getName() {
@@ -52,25 +67,47 @@ public class CourseWorkCategory {
 	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
-
-	public boolean canBeDeleted() {
-		return true;
+	
+	private ListItemsCrudHelper<CourseWork> getCourseWorksCrudHelper() {
+		if (this.courseWorksCrudHelper == null) {
+			if (this.courseWorks == null) {
+				this.courseWorks = new ArrayList<CourseWork>();
+			}
+			this.courseWorksCrudHelper = new ListItemsCrudHelper<CourseWork>(this.courseWorks);
+		}
+		return this.courseWorksCrudHelper;
 	}
-
+	
+	public CourseWork getCourseWork(String workId) {
+		return getCourseWorksCrudHelper().getItem(workId);
+	}
+	
+	public void addCourseWork(CourseWork work) {
+		this.getCourseWorksCrudHelper().addItem(work);
+	}
+	
+	public CourseWork updateCourseWork(CourseWork work) {
+		return this.getCourseWorksCrudHelper().replaceItem(work);
+	}
+	
+	public CourseWork deleteCourseWork(String workId) {
+		return this.getCourseWorksCrudHelper().deleteItem(workId);
+	}
+	
+	public List<CourseWork> getCourseWorks() {
+		return Collections.unmodifiableList(this.courseWorks);
+	}
+	
 	public CourseWorkCategoryDTO toCourseWorkCategoryDTO() {
-		CourseWorkCategoryDTO dto = new CourseWorkCategoryDTO();
-		dto.setCourseId(courseId);
-		dto.setCategoryId(categoryId);
-		dto.setName(name);
-		dto.setDescription(description);
-		return dto;
+		CourseWorkCategoryDTO categoryDTO = new CourseWorkCategoryDTO();
+		BeanUtils.copyProperties(this, categoryDTO);
+		return categoryDTO;
 	}
 
 	public static CourseWorkCategory fromCourseWorkCategoryDTO(CourseWorkCategoryDTO categoryDTO) {
 		CourseWorkCategory category = new CourseWorkCategory();
-
 		BeanUtils.copyProperties(categoryDTO, category);
-
 		return category;
 	}
+
 }

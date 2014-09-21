@@ -1,29 +1,22 @@
 package org.vietngumn.schoolapp.service;
 
-import org.vietngumn.schoolapp.event.courseWorkCategory.CreateCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.CreatedCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.DeleteCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.DeletedCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
-import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.UpdateCourseWorkCategoryCommand;
-import org.vietngumn.schoolapp.event.courseWorkCategory.UpdatedCourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWork.CreateCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.CreatedCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.DeleteCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.DeletedCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.UpdateCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.UpdatedCourseWork;
 
 public interface CourseWorkService {
 
-	CreatedCourseWorkCategory createCourseWorkCategory(CreateCourseWorkCategoryCommand createCommand);
+	CreatedCourseWork createCourseWork(CreateCourseWorkCommand createCommand);
 
-	ReadCourseWorkCategory readCourseWorkCategory(ReadCourseWorkCategoryCommand readCommand);
+	ReadCourseWork readCourseWork(ReadCourseWorkCommand readCommand);
 
-	UpdatedCourseWorkCategory updateCourseWorkCategory(UpdateCourseWorkCategoryCommand updateCommand);
+	UpdatedCourseWork updateCourseWork(UpdateCourseWorkCommand updateCommand);
 
-	DeletedCourseWorkCategory deleteCourseWorkCategory(DeleteCourseWorkCategoryCommand deleteCommand);
-//	
-//	CreateCourseWorkResponse createCourseWork(CreateCourseWorkRequest event);
-//
-//	ReadCourseWorkResponse readCourseWork(ReadCourseWorkRequest readCourseRequest);
-//
-//	UpdateCourseWorkResponse updateCourseWork(UpdateCourseWorkRequest updateCourseRequest);
-//
-//	DeleteCourseWorkResponse deleteCourseWork(DeleteCourseWorkRequest deleteCourseRequest);
+	DeletedCourseWork deleteCourseWork(DeleteCourseWorkCommand deleteCommand);
+	
 }

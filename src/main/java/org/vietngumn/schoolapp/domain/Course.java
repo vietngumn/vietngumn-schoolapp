@@ -1,11 +1,14 @@
 package org.vietngumn.schoolapp.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.vietngumn.schoolapp.event.course.CourseDTO;
+import org.vietngumn.schoolapp.helper.ListItemsCrudHelper;
 
 @Document
 public class Course extends AbstractDocument {
@@ -13,8 +16,11 @@ public class Course extends AbstractDocument {
 	private String courseId;
 	private String courseName;
 	private Map<String, StudentCourseRecord> studentRecords;
+	
+	@Transient
+	private ListItemsCrudHelper<CourseWorkCategory> categoriesListCrudHelper;
 	private List<CourseWorkCategory> courseWorkCategories = new ArrayList<CourseWorkCategory>();
-
+	
 	public Course(String courseId) {
 		this.courseId = courseId;
 	}
@@ -22,7 +28,7 @@ public class Course extends AbstractDocument {
 	public Course() {
 		
 	}
-
+	
 	public void setCourseId(String courseId) {
 		this.courseId = courseId;
 	}
@@ -39,61 +45,36 @@ public class Course extends AbstractDocument {
 		this.courseName = courseName;
 	}
 	
-	public CourseWorkCategory getCourseWorkCategory(String categoryId) {
-		for (CourseWorkCategory category : this.courseWorkCategories) {
-			if (category.getCategoryId().equalsIgnoreCase(categoryId)) {
-				return category;
+	private ListItemsCrudHelper<CourseWorkCategory> getCategoriesListCrudHelper() {
+		if (this.categoriesListCrudHelper == null) {
+			if (this.courseWorkCategories == null) {
+				this.courseWorkCategories = new ArrayList<CourseWorkCategory>();
 			}
+			this.categoriesListCrudHelper = new ListItemsCrudHelper<CourseWorkCategory>(this.courseWorkCategories);
 		}
-		return null;
+		return this.categoriesListCrudHelper;
+	}
+	
+	public CourseWorkCategory getCourseWorkCategory(String categoryId) {
+		return getCategoriesListCrudHelper().getItem(categoryId);
 	}
 	
 	public void addCourseWorkCategory(CourseWorkCategory category) {
-		this.courseWorkCategories.add(category);
+		this.getCategoriesListCrudHelper().addItem(category);
 	}
 	
 	public CourseWorkCategory updateCourseWorkCategory(CourseWorkCategory category) {
-		if (this.findAndReplaceCourseWorkCategory(this.courseWorkCategories, category)) {
-			return category;
-		}
-		return null;
+		return this.getCategoriesListCrudHelper().replaceItem(category);
 	}
 	
-	private boolean findAndReplaceCourseWorkCategory(List<CourseWorkCategory> categories, CourseWorkCategory categoryToReplace) {
-		for (int i = 0; i < categories.size(); i++) {
-			CourseWorkCategory category = categories.get(i);
-			if (category.getCategoryId().equalsIgnoreCase(categoryToReplace.getCategoryId())) {
-				categories.set(i, categoryToReplace);
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public CourseWorkCategory deleteCourseWorkCategory(String categoryId) {
-		CourseWorkCategory categoryToBeDeleted = null;
-		for (CourseWorkCategory category : this.courseWorkCategories) {
-			if (category.getCategoryId().equalsIgnoreCase(categoryId)) {
-				categoryToBeDeleted = category;
-				break;
-			}
-		}
-		
-		if (categoryToBeDeleted != null) {
-			this.courseWorkCategories.remove(categoryToBeDeleted);
-		}
-		return categoryToBeDeleted;
+		return this.getCategoriesListCrudHelper().deleteItem(categoryId);
 	}
 	
 	public List<CourseWorkCategory> getCourseWorkCategories() {
-		return this.courseWorkCategories;
-//		return Collections.unmodifiableList(this.courseWorkCategories);
+		return Collections.unmodifiableList(this.courseWorkCategories);
 	}
 	
-	public void setCourseWorkCategories(List<CourseWorkCategory> courseWorkCategories) {
-		this.courseWorkCategories = courseWorkCategories;
-	}
-
 	public boolean addStudentRecord(StudentCourseRecord studentRecord) {
 //		if (studentRecord == null || !studentRecord.getCourseId().equals(this.courseId) || studentRecords.containsKey(studentRecord.getStudentId())) {
 //			return false;
