@@ -6,7 +6,7 @@ public class Grade {
 
 	private String gradeId;
 	private CourseWork courseWork;
-	private StudentCourseRecord student;
+	private StudentRecord student;
 	
 	public Grade(String gradeId) {
 		this.gradeId = gradeId;
@@ -24,11 +24,11 @@ public class Grade {
 		this.courseWork = courseWork;
 	}
 
-	public StudentCourseRecord getStudent() {
+	public StudentRecord getStudent() {
 		return student;
 	}
 
-	public void setStudent(StudentCourseRecord student) {
+	public void setStudent(StudentRecord student) {
 		this.student = student;
 	}
 

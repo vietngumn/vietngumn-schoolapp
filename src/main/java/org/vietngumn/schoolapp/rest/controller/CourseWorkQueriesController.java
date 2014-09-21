@@ -21,7 +21,7 @@ import org.vietngumn.schoolapp.rest.domain.CourseWork;
 import org.vietngumn.schoolapp.service.CourseWorkService;
 
 @Controller
-@RequestMapping("/aggregators/courses/{courseId}/categories/{categoryId}/works")
+@RequestMapping("/aggregators/courses/{courseId}/workcategories/{categoryId}/works")
 public class CourseWorkQueriesController {
 
     private static Logger LOG = LoggerFactory.getLogger(CourseWorkQueriesController.class);

@@ -23,7 +23,7 @@ import org.vietngumn.schoolapp.rest.domain.CourseWork;
 import org.vietngumn.schoolapp.service.CourseWorkService;
 
 @Controller
-@RequestMapping("/aggregators/courses/{courseId}/categories/{categoryId}/works")
+@RequestMapping("/aggregators/courses/{courseId}/workcategories/{categoryId}/works")
 public class CourseWorkCommandsController {
 
     private static Logger LOG = LoggerFactory.getLogger(CourseWorkCommandsController.class);
@@ -45,7 +45,7 @@ public class CourseWorkCommandsController {
         
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
-                builder.path("/aggregators/courses/{courseId}/categories/{categoryId}/works/{workId}")
+                builder.path("/aggregators/courses/{courseId}/workcategories/{categoryId}/works/{workId}")
                         .buildAndExpand(courseId, categoryId, createdEvent.getNewCreatedId().toString()).toUri());
         return new ResponseEntity<CourseWork>(newWork, headers, HttpStatus.CREATED);
     }

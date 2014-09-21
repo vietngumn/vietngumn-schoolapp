@@ -23,7 +23,7 @@ import org.vietngumn.schoolapp.rest.domain.CourseWorkCategory;
 import org.vietngumn.schoolapp.service.CourseWorkCategoryService;
 
 @Controller
-@RequestMapping("/aggregators/courses/{courseId}/categories")
+@RequestMapping("/aggregators/courses/{courseId}/workcategories")
 public class CourseWorkCategoryCommandsController {
 
     private static Logger LOG = LoggerFactory.getLogger(CourseWorkCategoryCommandsController.class);
@@ -43,7 +43,7 @@ public class CourseWorkCategoryCommandsController {
         
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
-                builder.path("/aggregators/courses/{courseId}/categories/{categoryId}")
+                builder.path("/aggregators/courses/{courseId}/workcategories/{categoryId}")
                         .buildAndExpand(courseId, createdEvent.getNewCategoryId().toString()).toUri());
         return new ResponseEntity<CourseWorkCategory>(newCategory, headers, HttpStatus.CREATED);
     }
