@@ -19,8 +19,12 @@ public class ListItemsCrudHelper<T extends ListItem> {
 		return null;
 	}
 	
-	public void addItem(T item) {
-		this.sourceItems.add(item);
+	public T addItem(T item) {
+		if (getItem(item.getListItemId()) == null) {
+			this.sourceItems.add(item);
+			return item;
+		}
+		return null;
 	}
 	
 	public T replaceItem(T newItem) {
