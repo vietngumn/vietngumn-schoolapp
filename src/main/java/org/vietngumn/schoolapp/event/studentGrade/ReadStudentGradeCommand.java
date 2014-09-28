@@ -3,14 +3,14 @@ package org.vietngumn.schoolapp.event.studentGrade;
 import org.vietngumn.schoolapp.event.ReadCommand;
 
 public class ReadStudentGradeCommand extends ReadCommand {
-	private StudentGradeIdPath studentGradeId;
+	private StudentGradeIdPath gradeIdPath;
 
-	public ReadStudentGradeCommand(final StudentGradeIdPath studentGradeId) {
-		this.studentGradeId = studentGradeId;
+	public ReadStudentGradeCommand(final StudentGradeIdPath gradeIdPath) {
+		this.gradeIdPath = gradeIdPath;
 	}
 
-	public StudentGradeIdPath getStudentGradeId() {
-		return this.studentGradeId;
+	public StudentGradeIdPath getGradeIdPath() {
+		return this.gradeIdPath;
 	}
 	
 }

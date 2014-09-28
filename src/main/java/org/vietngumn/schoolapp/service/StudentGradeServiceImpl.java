@@ -29,93 +29,93 @@ public class StudentGradeServiceImpl implements StudentGradeService {
 	
 	@Override
 	public CreatedStudentGrade createStudentGrade(CreateStudentGradeCommand createCommand) {
-		StudentGradeIdPath studentGradeId = createCommand.getStudentGradeId();
+		StudentGradeIdPath gradeIdPath = createCommand.getGradeIdPath();
 		StudentGradeDTO gradeDTO = createCommand.getDetails();
 		
-		Course course = courseRepository.findByCourseId(studentGradeId.getCourseId());
+		Course course = courseRepository.findByCourseId(gradeIdPath.getCourseId());
 		
-		StudentRecord record = course.getStudentRecord(studentGradeId.getStudentId());
+		StudentRecord record = course.getStudentRecord(gradeIdPath.getStudentId());
 		
 		StudentGrade grade = StudentGrade.fromStudentGradeDTO(gradeDTO);
 		
 		StudentGrade addedGrade = record.addStudentGrade(grade);
 //		if (addedGrade == null) {
-//		return UpdatedStudentGrade.notFound(studentGradeId);
-//	}
+//			return CreateStudentGradeCommand.existing(gradeIdPath);
+//		}
 		
 		course = courseRepository.save(course);
 		
 		StudentGradeIdPath newCreatedId = new StudentGradeIdPath(
-				studentGradeId.getCourseId(), studentGradeId.getStudentId(), addedGrade.getCategoryId(), addedGrade.getWorkId());
+				gradeIdPath.getCourseId(), gradeIdPath.getStudentId(), addedGrade.getCategoryId(), addedGrade.getWorkId());
 		return new CreatedStudentGrade(newCreatedId, grade.toStudentGradeDTO());
 	}
 	
 	@Override
 	public ReadStudentGrade readStudentGrade(ReadStudentGradeCommand readCommand) {
-		StudentGradeIdPath studentGradeId = readCommand.getStudentGradeId();
+		StudentGradeIdPath gradeIdPath = readCommand.getGradeIdPath();
 		
-		Course course = courseRepository.findByCourseId(studentGradeId.getCourseId());
+		Course course = courseRepository.findByCourseId(gradeIdPath.getCourseId());
 		if (course == null) {
-			return ReadStudentGrade.notFound(studentGradeId);
+			return ReadStudentGrade.notFound(gradeIdPath);
 		}
 
-		StudentRecord record = course.getStudentRecord(studentGradeId.getStudentId());
+		StudentRecord record = course.getStudentRecord(gradeIdPath.getStudentId());
 		if (record == null) {
-			return ReadStudentGrade.notFound(studentGradeId);
+			return ReadStudentGrade.notFound(gradeIdPath);
 		}
 		
-		StudentGrade grade = record.getStudentGrade(studentGradeId.getCategoryId(), studentGradeId.getWorkId());
+		StudentGrade grade = record.getStudentGrade(gradeIdPath.getCategoryId(), gradeIdPath.getWorkId());
 		if (grade == null) {
-			return ReadStudentGrade.notFound(studentGradeId);
+			return ReadStudentGrade.notFound(gradeIdPath);
 		}
 		
-		return new ReadStudentGrade(studentGradeId, grade.toStudentGradeDTO());
+		return new ReadStudentGrade(gradeIdPath, grade.toStudentGradeDTO());
 	}
 
 
 	@Override
 	public UpdatedStudentGrade updateStudentGrade(UpdateStudentGradeCommand updateCommand) {
-		StudentGradeIdPath studentGradeId = updateCommand.getStudentGradeId();
+		StudentGradeIdPath gradeIdPath = updateCommand.getGradeIdPath();
 		StudentGradeDTO gradeDTO = updateCommand.getDetails();
 		
-		Course course = courseRepository.findByCourseId(studentGradeId.getCourseId());
+		Course course = courseRepository.findByCourseId(gradeIdPath.getCourseId());
 		
-		StudentRecord record = course.getStudentRecord(studentGradeId.getStudentId());
+		StudentRecord record = course.getStudentRecord(gradeIdPath.getStudentId());
 		
 		StudentGrade grade = StudentGrade.fromStudentGradeDTO(gradeDTO);
 		
 		StudentGrade updatedGrade = record.updateStudentGrade(grade);
 //		if (updatedGrade == null) {
-//			return UpdatedStudentGrade.notFound(studentGradeId);
+//			return UpdatedStudentGrade.notFound(gradeIdPath);
 //		}
 		
 		course = courseRepository.save(course);
 		
-		return new UpdatedStudentGrade(studentGradeId, updatedGrade.toStudentGradeDTO());
+		return new UpdatedStudentGrade(gradeIdPath, updatedGrade.toStudentGradeDTO());
 	}
 
 	@Override
 	public DeletedStudentGrade deleteStudentGrade(DeleteStudentGradeCommand deleteCommand) {
-		StudentGradeIdPath studentGradeId = deleteCommand.getStudentGradeId();
+		StudentGradeIdPath gradeIdPath = deleteCommand.getGradeIdPath();
 		
-		Course course = courseRepository.findByCourseId(studentGradeId.getCourseId());
+		Course course = courseRepository.findByCourseId(gradeIdPath.getCourseId());
 		if (course == null) {
-			return DeletedStudentGrade.notFound(studentGradeId);
+			return DeletedStudentGrade.notFound(gradeIdPath);
 		}
 
-		StudentRecord record = course.getStudentRecord(studentGradeId.getStudentId());
+		StudentRecord record = course.getStudentRecord(gradeIdPath.getStudentId());
 		if (record == null) {
-			return DeletedStudentGrade.notFound(studentGradeId);
+			return DeletedStudentGrade.notFound(gradeIdPath);
 		}
 		
-		StudentGrade grade = record.deleteStudentGrade(studentGradeId.getCategoryId(), studentGradeId.getWorkId());
+		StudentGrade grade = record.deleteStudentGrade(gradeIdPath.getCategoryId(), gradeIdPath.getWorkId());
 		if (grade == null) {
-			return DeletedStudentGrade.notFound(studentGradeId);
+			return DeletedStudentGrade.notFound(gradeIdPath);
 		}
 		
 		courseRepository.save(course);
 		
 		StudentGradeDTO details = grade.toStudentGradeDTO();
-		return new DeletedStudentGrade(studentGradeId, details);
+		return new DeletedStudentGrade(gradeIdPath, details);
 	}
 }

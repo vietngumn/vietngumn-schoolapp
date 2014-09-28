@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
 import org.vietngumn.schoolapp.event.courseWork.CreateCourseWorkCommand;
 import org.vietngumn.schoolapp.event.courseWork.CreatedCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.DeleteCourseWorkCommand;
@@ -33,31 +34,30 @@ public class CourseWorkCommandsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CourseWork> createCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @RequestBody CourseWork courseWork, UriComponentsBuilder builder) {
+    	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, null);
     	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO();
-    	workDTO.setCourseId(courseId);
-    	workDTO.setCategoryId(categoryId);
     	
-    	CreateCourseWorkCommand createCommand = new CreateCourseWorkCommand(workDTO);
+    	CreateCourseWorkCommand createCommand = new CreateCourseWorkCommand(workIdPath, workDTO);
     	
     	CreatedCourseWork createdEvent = courseWorkService.createCourseWork(createCommand);
     	
     	CourseWork newWork = CourseWork.fromCourseWorkDTO(createdEvent.getDetails());
         
+    	CourseWorkIdPath newCreatedId = createdEvent.getNewCreatedId();
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
                 builder.path("/aggregators/courses/{courseId}/workcategories/{categoryId}/works/{workId}")
-                        .buildAndExpand(courseId, categoryId, createdEvent.getNewCreatedId().toString()).toUri());
+                        .buildAndExpand(newCreatedId.getCourseId(), newCreatedId.getCategoryId(), newCreatedId.getWorkId()).toUri());
         return new ResponseEntity<CourseWork>(newWork, headers, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/{workId}")
     public ResponseEntity<CourseWork> updateCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @PathVariable String workId, @RequestBody CourseWork courseWork) {
+    	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, workId);
     	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO();
-    	workDTO.setCourseId(courseId);
-    	workDTO.setCategoryId(categoryId);
     	workDTO.setWorkId(workId);
     	
-    	UpdateCourseWorkCommand updateCommand = new UpdateCourseWorkCommand(courseId, categoryId, workId, workDTO);
+    	UpdateCourseWorkCommand updateCommand = new UpdateCourseWorkCommand(workIdPath, workDTO);
     	
     	UpdatedCourseWork updatedEvent = courseWorkService.updateCourseWork(updateCommand);
         if (!updatedEvent.isEntityFound()) {
@@ -74,8 +74,9 @@ public class CourseWorkCommandsController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{workId}")
     public ResponseEntity<CourseWork> deleteCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @PathVariable String workId) {
-
-    	DeleteCourseWorkCommand deleteCommand = new DeleteCourseWorkCommand(courseId, categoryId, workId);
+    	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, workId);
+    	
+    	DeleteCourseWorkCommand deleteCommand = new DeleteCourseWorkCommand(workIdPath);
     	
     	DeletedCourseWork deletedEvent = courseWorkService.deleteCourseWork(deleteCommand);
 

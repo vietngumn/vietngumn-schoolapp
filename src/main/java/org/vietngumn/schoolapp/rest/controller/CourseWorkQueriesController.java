@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
 import org.vietngumn.schoolapp.rest.domain.CourseWork;
@@ -42,7 +43,9 @@ public class CourseWorkQueriesController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{workId}")
     public ResponseEntity<CourseWork> readCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @PathVariable String workId) {
-    	ReadCourseWorkCommand readCommand = new ReadCourseWorkCommand(courseId, categoryId, workId);
+    	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, workId);
+    	
+    	ReadCourseWorkCommand readCommand = new ReadCourseWorkCommand(workIdPath);
     	
         ReadCourseWork response = courseWorkService.readCourseWork(readCommand);
 

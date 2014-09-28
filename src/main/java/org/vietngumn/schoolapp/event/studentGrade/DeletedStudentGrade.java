@@ -11,7 +11,7 @@ public class DeletedStudentGrade extends DeletedEvent {
 		this.studentGradeId = studentGradeId;
 	}
 
-	public DeletedStudentGrade(final StudentGradeIdPath studentGradeId, StudentGradeDTO details) {
+	public DeletedStudentGrade(final StudentGradeIdPath studentGradeId, final StudentGradeDTO details) {
 		this(studentGradeId);
 		this.details = details;
 		this.deletionCompleted = true;

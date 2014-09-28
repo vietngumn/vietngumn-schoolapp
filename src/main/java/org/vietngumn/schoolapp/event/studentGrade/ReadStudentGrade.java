@@ -3,28 +3,28 @@ package org.vietngumn.schoolapp.event.studentGrade;
 import org.vietngumn.schoolapp.event.ReadEvent;
 
 public class ReadStudentGrade extends ReadEvent {
-	private StudentGradeIdPath studentGradeId;
+	private StudentGradeIdPath gradeIdPath;
 	private StudentGradeDTO details;
 
-	private ReadStudentGrade(final StudentGradeIdPath studentGradeId) {
-		this.studentGradeId = studentGradeId;
+	private ReadStudentGrade(final StudentGradeIdPath gradeIdPath) {
+		this.gradeIdPath = gradeIdPath;
 	}
 
-	public ReadStudentGrade(final StudentGradeIdPath studentGradeId, final StudentGradeDTO details) {
-		this(studentGradeId);
+	public ReadStudentGrade(final StudentGradeIdPath gradeIdPath, final StudentGradeDTO details) {
+		this(gradeIdPath);
 		this.details = details;
 	}
 	
 	public StudentGradeIdPath getStudentGradeId() {
-		return studentGradeId;
+		return gradeIdPath;
 	}
 
 	public StudentGradeDTO getDetails() {
 		return details;
 	}
 
-	public static ReadStudentGrade notFound(final StudentGradeIdPath studentGradeId) {
-		ReadStudentGrade response = new ReadStudentGrade(studentGradeId);
+	public static ReadStudentGrade notFound(final StudentGradeIdPath gradeIdPath) {
+		ReadStudentGrade response = new ReadStudentGrade(gradeIdPath);
 		response.entityFound = false;
 		return response;
 	}

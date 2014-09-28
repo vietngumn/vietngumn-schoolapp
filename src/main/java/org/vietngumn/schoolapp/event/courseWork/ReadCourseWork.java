@@ -3,42 +3,28 @@ package org.vietngumn.schoolapp.event.courseWork;
 import org.vietngumn.schoolapp.event.ReadEvent;
 
 public class ReadCourseWork extends ReadEvent {
-	private String courseId;
-	private String categoryId;
-	private String workId;
+	private CourseWorkIdPath workIdPath;
 	private CourseWorkDTO details;
 
-	private ReadCourseWork(String courseId, String categoryId, String workId) {
-		this.courseId = courseId;
-		this.categoryId = categoryId;
-		this.workId = workId;
+	private ReadCourseWork(final CourseWorkIdPath workIdPath) {
+		this.workIdPath = workIdPath;
 	}
 
-	public ReadCourseWork(String courseId, String categoryId, String workId, CourseWorkDTO details) {
-		this.courseId = courseId;
-		this.categoryId = categoryId;
-		this.courseId = courseId;
+	public ReadCourseWork(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
+		this(workIdPath);
 		this.details = details;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public CourseWorkIdPath getWorkIdPath() {
+		return this.workIdPath;
 	}
 	
-	public String getCategoryId() {
-		return categoryId;
-	}
-
-	public String getWorkId() {
-		return workId;
-	}
-
 	public CourseWorkDTO getDetails() {
 		return details;
 	}
 
-	public static ReadCourseWork notFound(String courseId, String categoryId, String workId) {
-		ReadCourseWork response = new ReadCourseWork(courseId, categoryId, workId);
+	public static ReadCourseWork notFound(final CourseWorkIdPath workIdPath) {
+		ReadCourseWork response = new ReadCourseWork(workIdPath);
 		response.entityFound = false;
 		return response;
 	}

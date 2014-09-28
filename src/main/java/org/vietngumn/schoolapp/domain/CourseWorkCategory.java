@@ -82,8 +82,8 @@ public class CourseWorkCategory implements ListItem {
 		return getCourseWorksCrudHelper().getItem(workId);
 	}
 	
-	public void addCourseWork(CourseWork work) {
-		this.getCourseWorksCrudHelper().addItem(work);
+	public CourseWork addCourseWork(CourseWork work) {
+		return this.getCourseWorksCrudHelper().addItem(work);
 	}
 	
 	public CourseWork updateCourseWork(CourseWork work) {

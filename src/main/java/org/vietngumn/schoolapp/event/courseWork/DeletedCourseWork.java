@@ -4,36 +4,23 @@ import org.vietngumn.schoolapp.event.DeletedEvent;
 
 public class DeletedCourseWork extends DeletedEvent {
 
-	private String courseId;
-	private String categoryId;
-	private String workId;
+	private CourseWorkIdPath workIdPath;
 	private CourseWorkDTO details;
 	
-	private DeletedCourseWork(String courseId, String categoryId, String workId) {
-		this.courseId = courseId;
-		this.categoryId = categoryId;
-		this.workId = workId;
+	private DeletedCourseWork(final CourseWorkIdPath workIdPath) {
+		this.workIdPath = workIdPath;
 	}
 
-	public DeletedCourseWork(String courseId, String categoryId, String workId, CourseWorkDTO details) {
-		this.courseId = courseId;
-		this.categoryId = categoryId;
+	public DeletedCourseWork(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
+		this(workIdPath);
 		this.details = details;
 		this.deletionCompleted = true;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public CourseWorkIdPath getWorkIdPath() {
+		return this.workIdPath;
 	}
 	
-	public String getCategoryId() {
-		return categoryId;
-	}
-
-	public String getWorkId() {
-		return workId;
-	}
-
 	public CourseWorkDTO getDetails() {
 		return details;
 	}
@@ -43,15 +30,15 @@ public class DeletedCourseWork extends DeletedEvent {
 		return deletionCompleted;
 	}
 
-	public static DeletedCourseWork deletionForbidden(String courseId, String categoryId, String workId, CourseWorkDTO details) {
-		DeletedCourseWork response = new DeletedCourseWork(courseId, categoryId, workId, details);
+	public static DeletedCourseWork deletionForbidden(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
+		DeletedCourseWork response = new DeletedCourseWork(workIdPath, details);
 		response.entityFound = true;
 		response.deletionCompleted = false;
 		return response;
 	}
 
-	public static DeletedCourseWork notFound(String courseId, String categoryId, String workId) {
-		DeletedCourseWork response = new DeletedCourseWork(courseId, categoryId, workId);
+	public static DeletedCourseWork notFound(final CourseWorkIdPath workIdPath) {
+		DeletedCourseWork response = new DeletedCourseWork(workIdPath);
 		response.entityFound = false;
 		return response;
 	}

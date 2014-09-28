@@ -4,16 +4,16 @@ import org.vietngumn.schoolapp.event.UpdatedEvent;
 
 public class UpdatedStudentGrade extends UpdatedEvent {
 
-	private StudentGradeIdPath studentGradeId;
+	private StudentGradeIdPath gradeIdPath;
 	private StudentGradeDTO details;
 
-	public UpdatedStudentGrade(StudentGradeIdPath studentGradeId, StudentGradeDTO details) {
-		this.studentGradeId = studentGradeId;
+	public UpdatedStudentGrade(StudentGradeIdPath gradeIdPath, StudentGradeDTO details) {
+		this.gradeIdPath = gradeIdPath;
 		this.details = details;
 	}
 
-	public StudentGradeIdPath getStudentGradeId() {
-		return studentGradeId;
+	public StudentGradeIdPath getGradeIdPath() {
+		return gradeIdPath;
 	}
 
 	public StudentGradeDTO getDetails() {

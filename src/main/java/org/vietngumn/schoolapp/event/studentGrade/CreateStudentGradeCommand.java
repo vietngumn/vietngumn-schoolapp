@@ -3,16 +3,16 @@ package org.vietngumn.schoolapp.event.studentGrade;
 import org.vietngumn.schoolapp.event.CreateCommand;
 
 public class CreateStudentGradeCommand extends CreateCommand {
-	private StudentGradeIdPath studentGradeId;
+	private StudentGradeIdPath gradeIdPath;
 	private StudentGradeDTO details;
 
-	public CreateStudentGradeCommand(final StudentGradeIdPath studentGradeId, final StudentGradeDTO gradeDTO) {
-		this.studentGradeId = studentGradeId;
+	public CreateStudentGradeCommand(final StudentGradeIdPath gradeIdPath, final StudentGradeDTO gradeDTO) {
+		this.gradeIdPath = gradeIdPath;
 		this.details = gradeDTO;
 	}
 	
-	public StudentGradeIdPath getStudentGradeId() {
-		return studentGradeId;
+	public StudentGradeIdPath getGradeIdPath() {
+		return gradeIdPath;
 	}
 
 	public StudentGradeDTO getDetails() {

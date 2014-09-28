@@ -4,14 +4,14 @@ import org.vietngumn.schoolapp.event.DeleteCommand;
 
 public class DeleteStudentGradeCommand extends DeleteCommand {
 
-	private StudentGradeIdPath studentGradeId;
+	private StudentGradeIdPath gradeIdPath;
 
 	public DeleteStudentGradeCommand(final StudentGradeIdPath studentGradeId) {
-		this.studentGradeId = studentGradeId;
+		this.gradeIdPath = studentGradeId;
 	}
 
-	public StudentGradeIdPath getStudentGradeId() {
-		return studentGradeId;
+	public StudentGradeIdPath getGradeIdPath() {
+		return gradeIdPath;
 	}
 	
 }

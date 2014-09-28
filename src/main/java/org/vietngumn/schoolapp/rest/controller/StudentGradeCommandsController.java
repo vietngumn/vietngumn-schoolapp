@@ -34,10 +34,10 @@ public class StudentGradeCommandsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<StudentGrade> createStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @RequestBody StudentGrade studentGrade, UriComponentsBuilder builder) {
-    	StudentGradeIdPath studentGradeID = new StudentGradeIdPath(courseId, studentId, null, null);
+    	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, null, null);
     	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO();
     	
-    	CreateStudentGradeCommand createCommand = new CreateStudentGradeCommand(studentGradeID, gradeDTO);
+    	CreateStudentGradeCommand createCommand = new CreateStudentGradeCommand(gradeIdPath, gradeDTO);
     	
     	CreatedStudentGrade createdEvent = studentGradeService.createStudentGrade(createCommand);
     	
@@ -53,12 +53,12 @@ public class StudentGradeCommandsController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/categories/{categoryId}/works/{workId}")
     public ResponseEntity<StudentGrade> updateStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @PathVariable String categoryId, @PathVariable String workId, @RequestBody StudentGrade studentGrade) {
-    	StudentGradeIdPath studentGradeID = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
+    	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
     	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO();
     	gradeDTO.setCategoryId(categoryId);
 		gradeDTO.setWorkId(workId);
 		
-    	UpdateStudentGradeCommand updateCommand = new UpdateStudentGradeCommand(studentGradeID, gradeDTO);
+    	UpdateStudentGradeCommand updateCommand = new UpdateStudentGradeCommand(gradeIdPath, gradeDTO);
     	
     	UpdatedStudentGrade updatedEvent = studentGradeService.updateStudentGrade(updateCommand);
         if (!updatedEvent.isEntityFound()) {
@@ -75,9 +75,9 @@ public class StudentGradeCommandsController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/categories/{categoryId}/works/{workId}")
     public ResponseEntity<StudentGrade> deleteStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @PathVariable String categoryId, @PathVariable String workId) {
-    	StudentGradeIdPath studentGradeID = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
+    	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
     	
-    	DeleteStudentGradeCommand deleteCommand = new DeleteStudentGradeCommand(studentGradeID);
+    	DeleteStudentGradeCommand deleteCommand = new DeleteStudentGradeCommand(gradeIdPath);
     	
     	DeletedStudentGrade deletedEvent = studentGradeService.deleteStudentGrade(deleteCommand);
 

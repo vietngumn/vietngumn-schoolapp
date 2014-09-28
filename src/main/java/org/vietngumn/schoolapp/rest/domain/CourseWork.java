@@ -60,8 +60,6 @@ public class CourseWork extends ResourceSupport implements Serializable {
 
 	public CourseWorkDTO toCourseWorkDTO() {
 		CourseWorkDTO workDTO = new CourseWorkDTO();
-		workDTO.setCourseId(courseId);
-		workDTO.setCategoryId(categoryId);
 		workDTO.setName(name);
 		workDTO.setDescription(description);
 		return workDTO;
@@ -69,8 +67,6 @@ public class CourseWork extends ResourceSupport implements Serializable {
 
 	public static CourseWork fromCourseWorkDTO(CourseWorkDTO workDTO) {
 		CourseWork courseWork = new CourseWork();
-		courseWork.setCourseId(workDTO.getCourseId());
-		courseWork.setCategoryId(workDTO.getCategoryId());
 		courseWork.setWorkId(workDTO.getWorkId());
 		courseWork.setName(workDTO.getName());
 		courseWork.setDescription(workDTO.getDescription());
