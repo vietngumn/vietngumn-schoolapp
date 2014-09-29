@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.vietngumn.schoolapp.event.course.CourseDTO;
@@ -14,6 +15,8 @@ public class Course extends AbstractDocument {
 	
 	private String courseId;
 	private String courseName;
+	private String schoolYearId;
+	private String description;
 	
 	@Transient
 	private ListItemsCrudHelper<CourseWorkCategory> categoriesListHelper;
@@ -23,12 +26,12 @@ public class Course extends AbstractDocument {
 	private ListItemsCrudHelper<StudentRecord> recordsListHelper;
 	private List<StudentRecord> studentRecords = new ArrayList<StudentRecord>();
 	
-	public Course(String courseId) {
-		this.courseId = courseId;
-	}
-	
 	public Course() {
 		
+	}
+	
+	public Course(String courseId) {
+		this.courseId = courseId;
 	}
 	
 	public void setCourseId(String courseId) {
@@ -47,6 +50,22 @@ public class Course extends AbstractDocument {
 		this.courseName = courseName;
 	}
 	
+	public String getSchoolYearId() {
+		return this.schoolYearId;
+	}
+
+	public void setSchoolYear(String schoolYearId) {
+		this.schoolYearId = schoolYearId;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	private ListItemsCrudHelper<CourseWorkCategory> getCategoriesListHelper() {
 		if (this.categoriesListHelper == null) {
 			if (this.courseWorkCategories == null) {
@@ -108,15 +127,14 @@ public class Course extends AbstractDocument {
 	}
 	
 	public CourseDTO toCourseDTO() {
-		CourseDTO details = new CourseDTO();
-		details.setCourseId(this.courseId);
-		details.setCourseName(this.courseName);
-		
-		if (this.courseWorkCategories != null) {
-			for (CourseWorkCategory category : this.courseWorkCategories) {
-				details.addCourseWorkCategory(category.toCourseWorkCategoryDTO());
-			}
-		}
-		return details;
+		CourseDTO courseDTO = new CourseDTO();
+		BeanUtils.copyProperties(this, courseDTO);
+		return courseDTO;
+	}
+
+	public static Course fromCourseDTO(CourseDTO courseDTO) {
+		Course course = new Course();
+		BeanUtils.copyProperties(courseDTO, course);
+		return course;
 	}
 }

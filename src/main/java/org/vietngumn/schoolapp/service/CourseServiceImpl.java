@@ -1,13 +1,19 @@
 package org.vietngumn.schoolapp.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vietngumn.schoolapp.domain.Course;
 import org.vietngumn.schoolapp.event.course.CourseDTO;
+import org.vietngumn.schoolapp.event.course.CourseQueryCriteria;
 import org.vietngumn.schoolapp.event.course.CreateCourseCommand;
 import org.vietngumn.schoolapp.event.course.CreatedCourse;
 import org.vietngumn.schoolapp.event.course.DeleteCourseCommand;
 import org.vietngumn.schoolapp.event.course.DeletedCourse;
+import org.vietngumn.schoolapp.event.course.QueriedCourses;
+import org.vietngumn.schoolapp.event.course.QueryCoursesCommand;
 import org.vietngumn.schoolapp.event.course.ReadCourse;
 import org.vietngumn.schoolapp.event.course.ReadCourseCommand;
 import org.vietngumn.schoolapp.event.course.UpdateCourseCommand;
@@ -30,67 +36,55 @@ public class CourseServiceImpl implements CourseService {
 		CourseDTO courseDetails = createCommand.getDetails();
 		//		String courseId = new CourseId(courseDetails.getCourseLevel(), courseDetails.getCourseSection(), courseDetails.getSchoolYear());
 
-		Course course = new Course();
-		course.setCourseId(courseDetails.getCourseId());
-		course.setCourseName(courseDetails.getCourseName());
-
+		Course course = Course.fromCourseDTO(courseDetails);
+		
 		//		Course course = coursesRepository.findById(courseId.getId());
 		//		if (course == null) {
 		//			//throw handle create error response
 		//			
 		//		}
 
-		/*CourseWork courseWork = new CourseWork();
-		courseWork.setCourseWorkId(new ObjectId().toString());
-		courseWork.setName("exam one");
-		courseWork.setDescription("exam one description");
-		course.addCourseWork(courseWork);
-		
-		CourseWork courseWork2 = new CourseWork();
-		courseWork2.setCourseWorkId(new ObjectId().toString());
-		courseWork2.setName("exam two");
-		courseWork2.setDescription("exam two description");
-		course.addCourseWork(courseWork2);*/
-		
 		course = courseRepository.save(course);
 		return new CreatedCourse(course.getCourseId(), course.toCourseDTO());
 	}
 
 	@Override
-	public ReadCourse readCourse(ReadCourseCommand readRequest) {
+	public ReadCourse readCourse(ReadCourseCommand readCommand) {
 
-		Course course = courseRepository.findByCourseId(readRequest.getCourseId());
+		Course course = courseRepository.findByCourseId(readCommand.getCourseId());
 
 		if (course == null) {
-			return ReadCourse.notFound(readRequest.getCourseId());
+			return ReadCourse.notFound(readCommand.getCourseId());
 		}
 
-		return new ReadCourse(readRequest.getCourseId(), course.toCourseDTO());
+		return new ReadCourse(readCommand.getCourseId(), course.toCourseDTO());
 	}
 
 	@Override
-	public UpdatedCourse updateCourse(UpdateCourseCommand updateRequest) {
-		Course course = courseRepository.findByCourseId(updateRequest.getCourseId());
+	public UpdatedCourse updateCourse(UpdateCourseCommand updateCommand) {
+		Course course = courseRepository.findByCourseId(updateCommand.getCourseId());
 
 		if (course == null) {
-			return UpdatedCourse.notFound(updateRequest.getCourseId());
+			return UpdatedCourse.notFound(updateCommand.getCourseId());
 		}
 
-		CourseDTO courseDetails = updateRequest.getCourseDetails();
+		CourseDTO courseDetails = updateCommand.getCourseDetails();
 		course.setCourseName(courseDetails.getCourseName());
+		course.setSchoolYear(courseDetails.getSchoolYearId());
+		course.setDescription(courseDetails.getDescription());
 
 		Course updatedCourse = courseRepository.save(course);
 
-		return new UpdatedCourse(updateRequest.getCourseId(), updatedCourse.toCourseDTO());
+		return new UpdatedCourse(updateCommand.getCourseId(), updatedCourse.toCourseDTO());
 	}
 	
 	@Override
-	public DeletedCourse deleteCourse(DeleteCourseCommand deleteRequest) {
+	public DeletedCourse deleteCourse(DeleteCourseCommand deleteCommand) {
 
-		Course course = courseRepository.findByCourseId(deleteRequest.getCourseId());
+		Course course = courseRepository.findByCourseId(deleteCommand.getCourseId());
 
 		if (course == null) {
-			return DeletedCourse.notFound(deleteRequest.getCourseId());
+			return DeletedCourse.notFound(deleteCommand.getCourseId());
 		}
 
 		CourseDTO details = course.toCourseDTO();
@@ -100,6 +94,20 @@ public class CourseServiceImpl implements CourseService {
 		//		}
 
 		courseRepository.delete(course);
-		return new DeletedCourse(deleteRequest.getCourseId(), details);
+		return new DeletedCourse(deleteCommand.getCourseId(), details);
+	}
+	
+	@Override
+	public QueriedCourses queryCourses(QueryCoursesCommand queryCommand) {
+		CourseQueryCriteria criteria = queryCommand.getCourseQueryCriteria();
+		
+		List<Course> courses = courseRepository.findBySchoolYearId(criteria.getSchoolYearId());
+		
+		List<CourseDTO> coursesDTOs = new ArrayList<CourseDTO>();
+		for (Course course : courses) {
+			coursesDTOs.add(course.toCourseDTO());
+		}
+		
+		return new QueriedCourses(coursesDTOs);
 	}
 }

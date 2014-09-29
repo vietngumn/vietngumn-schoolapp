@@ -12,7 +12,8 @@ public class CourseDTO {
 	private String courseName;
 	private String courseLevel;
 	private String courseSection;
-	private String schoolYear;
+	private String schoolYearId;
+	private String description;
 	private List<CourseWorkCategoryDTO> courseWorkCategories = new ArrayList<CourseWorkCategoryDTO>();
 	
 	public String getCourseId() {
@@ -47,14 +48,22 @@ public class CourseDTO {
 		this.courseLevel = courseLevel;
 	}
 	
-	public String getSchoolYear() {
-		return schoolYear;
+	public String getSchoolYearId() {
+		return schoolYearId;
 	}
 	
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
+	public void setSchoolYearId(String schoolYearId) {
+		this.schoolYearId = schoolYearId;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void addCourseWorkCategory(CourseWorkCategoryDTO details) {
 		courseWorkCategories.add(details);
 	}

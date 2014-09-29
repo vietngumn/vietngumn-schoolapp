@@ -1,5 +1,7 @@
 package org.vietngumn.schoolapp.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.vietngumn.schoolapp.domain.Course;
 
@@ -12,4 +14,5 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Str
 
 	Course findByCourseId(String id);
 	
+	List<Course> findBySchoolYearId(String schoolYearId);
 }

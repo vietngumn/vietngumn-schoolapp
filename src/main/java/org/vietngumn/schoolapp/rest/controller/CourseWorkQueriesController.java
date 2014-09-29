@@ -33,7 +33,7 @@ public class CourseWorkQueriesController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<CourseWork> getAllCourseWorkCategories(@PathVariable String courseID) {
+    public List<CourseWork> getAllCourseWork(@PathVariable String courseID) {
         List<CourseWork> categories = new ArrayList<CourseWork>();
 //        for (CourseDetails detail : courseService.readAllCourseWorkCategories(new RequestAllOrdersEvent()).getOrdersDetails()) {
 //            orders.add(Order.fromOrderDetails(detail));
