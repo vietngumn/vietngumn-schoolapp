@@ -72,9 +72,9 @@ public class Course extends ResourceSupport implements Serializable {
 		course.setSchoolYearId(courseDetails.getSchoolYearId());
 		course.setDescription(courseDetails.getDescription());
 
-		course.add(linkTo(CourseQueriesController.class).slash(course.getCourseId()).withSelfRel());
-		course.add(linkTo(CourseWorkCategoryQueriesController.class, course.getCourseId()).withRel("Course WorkCategories"));
-		course.add(linkTo(StudentRecordQueriesController.class, course.getCourseId()).withRel("Course StudentRecords"));
+		course.add(linkTo(CourseQueriesController.class).slash(courseDetails.getCourseId()).withSelfRel());
+		course.add(linkTo(CourseWorkCategoryQueriesController.class, courseDetails.getCourseId()).withRel("Course WorkCategories"));
+		course.add(linkTo(StudentRecordQueriesController.class, courseDetails.getCourseId()).withRel("Course StudentRecords"));
 		return course;
 	}
 	
@@ -85,7 +85,7 @@ public class Course extends ResourceSupport implements Serializable {
 		course.setSchoolYearId(dto.getSchoolYearId());
 		course.setDescription(dto.getDescription());
 
-		course.add(linkTo(CourseQueriesController.class).slash(course.getCourseId()).withSelfRel());
+		course.add(linkTo(CourseQueriesController.class).slash(dto.getCourseId()).withSelfRel());
 		return course;
 	}
 	

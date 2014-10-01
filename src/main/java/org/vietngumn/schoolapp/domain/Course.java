@@ -54,7 +54,7 @@ public class Course extends AbstractDocument {
 		return this.schoolYearId;
 	}
 
-	public void setSchoolYear(String schoolYearId) {
+	public void setSchoolYearId(String schoolYearId) {
 		this.schoolYearId = schoolYearId;
 	}
 

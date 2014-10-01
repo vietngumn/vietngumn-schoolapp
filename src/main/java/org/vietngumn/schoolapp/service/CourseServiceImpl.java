@@ -70,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
 
 		CourseDTO courseDetails = updateCommand.getCourseDetails();
 		course.setCourseName(courseDetails.getCourseName());
-		course.setSchoolYear(courseDetails.getSchoolYearId());
+		course.setSchoolYearId(courseDetails.getSchoolYearId());
 		course.setDescription(courseDetails.getDescription());
 
 		Course updatedCourse = courseRepository.save(course);
@@ -99,15 +99,15 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Override
 	public QueriedCourses queryCourses(QueryCoursesCommand queryCommand) {
-		CourseQueryCriteria criteria = queryCommand.getCourseQueryCriteria();
+		CourseQueryCriteria criteria = queryCommand.getQueryCriteria();
 		
 		List<Course> courses = courseRepository.findBySchoolYearId(criteria.getSchoolYearId());
 		
-		List<CourseDTO> coursesDTOs = new ArrayList<CourseDTO>();
+		List<CourseDTO> courseDTOs = new ArrayList<CourseDTO>();
 		for (Course course : courses) {
-			coursesDTOs.add(course.toCourseDTO());
+			courseDTOs.add(course.toCourseDTO());
 		}
 		
-		return new QueriedCourses(coursesDTOs);
+		return new QueriedCourses(courseDTOs);
 	}
 }

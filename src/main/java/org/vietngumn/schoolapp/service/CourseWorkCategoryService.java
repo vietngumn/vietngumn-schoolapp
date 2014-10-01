@@ -4,6 +4,8 @@ import org.vietngumn.schoolapp.event.courseWorkCategory.CreateCourseWorkCategory
 import org.vietngumn.schoolapp.event.courseWorkCategory.CreatedCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.DeleteCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.DeletedCourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWorkCategory.QueriedWorkCategories;
+import org.vietngumn.schoolapp.event.courseWorkCategory.QueryWorkCategoriesCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.UpdateCourseWorkCategoryCommand;
@@ -18,5 +20,7 @@ public interface CourseWorkCategoryService {
 	UpdatedCourseWorkCategory updateCourseWorkCategory(UpdateCourseWorkCategoryCommand updateCommand);
 
 	DeletedCourseWorkCategory deleteCourseWorkCategory(DeleteCourseWorkCategoryCommand deleteCommand);
+	
+	QueriedWorkCategories queryCourseWorkCategories(QueryWorkCategoriesCommand queryCommand);
 
 }

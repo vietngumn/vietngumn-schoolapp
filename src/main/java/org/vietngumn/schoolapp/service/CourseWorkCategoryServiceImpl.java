@@ -1,5 +1,8 @@
 package org.vietngumn.schoolapp.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +13,13 @@ import org.vietngumn.schoolapp.event.courseWorkCategory.CreateCourseWorkCategory
 import org.vietngumn.schoolapp.event.courseWorkCategory.CreatedCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.DeleteCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.DeletedCourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWorkCategory.QueriedWorkCategories;
+import org.vietngumn.schoolapp.event.courseWorkCategory.QueryWorkCategoriesCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.UpdateCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.UpdatedCourseWorkCategory;
+import org.vietngumn.schoolapp.event.courseWorkCategory.WorkCategoryQueryCriteria;
 import org.vietngumn.schoolapp.repository.CourseRepository;
 
 @Service
@@ -94,5 +100,23 @@ public class CourseWorkCategoryServiceImpl implements CourseWorkCategoryService 
 		CourseWorkCategoryDTO details = category.toCourseWorkCategoryDTO();
 		courseRepository.save(course);
 		return new DeletedCourseWorkCategory(deleteCommand.getCourseId(), deleteCommand.getCategoryId(), details);
+	}
+	
+	@Override
+	public QueriedWorkCategories queryCourseWorkCategories(QueryWorkCategoriesCommand queryCommand) {
+		
+		WorkCategoryQueryCriteria criteria = queryCommand.getQueryCriteria();
+		
+		List<CourseWorkCategoryDTO> categoryDTOs = new ArrayList<CourseWorkCategoryDTO>();
+
+		Course course = courseRepository.findByCourseId(criteria.getCourseId());
+		
+		if (course != null) {
+			for (CourseWorkCategory category : course.getCourseWorkCategories()) {
+				categoryDTOs.add(category.toCourseWorkCategoryDTO());
+			}
+		}
+		
+		return new QueriedWorkCategories(categoryDTOs);
 	}
 }
