@@ -4,6 +4,8 @@ import org.vietngumn.schoolapp.event.courseWork.CreateCourseWorkCommand;
 import org.vietngumn.schoolapp.event.courseWork.CreatedCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.DeleteCourseWorkCommand;
 import org.vietngumn.schoolapp.event.courseWork.DeletedCourseWork;
+import org.vietngumn.schoolapp.event.courseWork.QueriedWorks;
+import org.vietngumn.schoolapp.event.courseWork.QueryWorksCommand;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
 import org.vietngumn.schoolapp.event.courseWork.UpdateCourseWorkCommand;
@@ -19,4 +21,5 @@ public interface CourseWorkService {
 
 	DeletedCourseWork deleteCourseWork(DeleteCourseWorkCommand deleteCommand);
 	
+	QueriedWorks queryCourseWorks(QueryWorksCommand queryCommand);
 }

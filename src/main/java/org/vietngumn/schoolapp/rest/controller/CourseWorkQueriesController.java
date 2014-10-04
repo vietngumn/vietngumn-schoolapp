@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
+import org.vietngumn.schoolapp.event.courseWork.QueriedWorks;
+import org.vietngumn.schoolapp.event.courseWork.QueryWorksCommand;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
+import org.vietngumn.schoolapp.event.courseWork.WorkQueryCriteria;
 import org.vietngumn.schoolapp.rest.domain.CourseWork;
 import org.vietngumn.schoolapp.service.CourseWorkService;
 
@@ -33,12 +36,17 @@ public class CourseWorkQueriesController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<CourseWork> getAllCourseWork(@PathVariable String courseID) {
-        List<CourseWork> categories = new ArrayList<CourseWork>();
-//        for (CourseDetails detail : courseService.readAllCourseWorkCategories(new RequestAllOrdersEvent()).getOrdersDetails()) {
-//            orders.add(Order.fromOrderDetails(detail));
-//        }
-        return categories;
+    public List<CourseWork> getAllCourseWorks(@PathVariable String courseId, @PathVariable String categoryId) {
+    	WorkQueryCriteria queryCriteria = new WorkQueryCriteria();
+    	queryCriteria.setWorkIdPath(new CourseWorkIdPath(courseId, categoryId, null));
+    	
+    	QueriedWorks queriedWorks = courseWorkService.queryCourseWorks(new QueryWorksCommand(queryCriteria));
+    	
+        List<CourseWork> works = new ArrayList<CourseWork>();
+        for (CourseWorkDTO dto : queriedWorks.getWorks()) {
+        	works.add(CourseWork.fromQueriedCourseWorkDTO(dto));
+        }
+        return works;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{workId}")

@@ -7,11 +7,9 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
-import org.vietngumn.schoolapp.event.course.CourseDTO;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
 import org.vietngumn.schoolapp.rest.controller.CourseQueriesController;
 import org.vietngumn.schoolapp.rest.controller.CourseWorkCategoryQueriesController;
-import org.vietngumn.schoolapp.rest.controller.StudentRecordQueriesController;
 
 
 @XmlRootElement

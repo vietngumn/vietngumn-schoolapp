@@ -3,6 +3,7 @@ package org.vietngumn.schoolapp.domain;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
 import org.vietngumn.schoolapp.helper.ListItem;
 
 public class CourseWork implements ListItem {
@@ -77,6 +78,7 @@ public class CourseWork implements ListItem {
 
 	public CourseWorkDTO toCourseWorkDTO() {
 		CourseWorkDTO workDTO = new CourseWorkDTO();
+		workDTO.setIdPath(new CourseWorkIdPath(courseId, categoryId, workId));
 		BeanUtils.copyProperties(this, workDTO);
 		return workDTO;
 	}

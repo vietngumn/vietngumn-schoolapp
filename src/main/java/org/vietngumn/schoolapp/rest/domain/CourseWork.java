@@ -1,11 +1,15 @@
 package org.vietngumn.schoolapp.rest.domain;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
+import org.vietngumn.schoolapp.rest.controller.CourseWorkCategoryQueriesController;
+import org.vietngumn.schoolapp.rest.controller.CourseWorkQueriesController;
 
 
 @XmlRootElement
@@ -65,13 +69,24 @@ public class CourseWork extends ResourceSupport implements Serializable {
 		return workDTO;
 	}
 
-	public static CourseWork fromCourseWorkDTO(CourseWorkDTO workDTO) {
+	public static CourseWork fromCourseWorkDTO(CourseWorkDTO dto) {
 		CourseWork courseWork = new CourseWork();
-		courseWork.setWorkId(workDTO.getWorkId());
-		courseWork.setName(workDTO.getName());
-		courseWork.setDescription(workDTO.getDescription());
-//		courseWork.add(linkTo(OrderQueriesController.class).slash(courseWork.getCourseWorkId()).withSelfRel());
+		courseWork.setWorkId(dto.getWorkId());
+		courseWork.setName(dto.getName());
+		courseWork.setDescription(dto.getDescription());
 
+		courseWork.add(linkTo(CourseWorkQueriesController.class, dto.getIdPath().getCourseId(), dto.getIdPath().getCategoryId()).slash(dto.getWorkId()).withSelfRel());
+		courseWork.add(linkTo(CourseWorkCategoryQueriesController.class, dto.getIdPath().getCourseId()).slash(dto.getIdPath().getCategoryId()).withRel("CourseWorkCategory"));
+		return courseWork;
+	}
+	
+	public static CourseWork fromQueriedCourseWorkDTO(CourseWorkDTO dto) {
+		CourseWork courseWork = new CourseWork();
+		courseWork.setWorkId(dto.getWorkId());
+		courseWork.setName(dto.getName());
+		courseWork.setDescription(dto.getDescription());
+
+		courseWork.add(linkTo(CourseWorkQueriesController.class, dto.getIdPath().getCourseId(), dto.getIdPath().getCategoryId()).slash(dto.getWorkId()).withSelfRel());
 		return courseWork;
 	}
 	
