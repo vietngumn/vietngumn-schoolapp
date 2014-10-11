@@ -5,7 +5,7 @@ import org.vietngumn.schoolapp.event.CreateCommand;
 public class CreateStudentRecordCommand extends CreateCommand {
 	private StudentRecordDTO details;
 
-	public CreateStudentRecordCommand(StudentRecordDTO recordDTO) {
+	public CreateStudentRecordCommand(final StudentRecordDTO recordDTO) {
 		this.details = recordDTO;
 	}
 

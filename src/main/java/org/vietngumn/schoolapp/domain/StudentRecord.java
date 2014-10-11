@@ -7,33 +7,19 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.vietngumn.schoolapp.event.studentRecord.StudentRecordDTO;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordIdPath;
 import org.vietngumn.schoolapp.helper.ListItem;
 import org.vietngumn.schoolapp.helper.ListItemsCrudHelper;
 
 public class StudentRecord implements ListItem {
 	
-	@Transient
-	private Course course;
-	private String courseId;
-	
-	@Transient
-	private Student student;
 	private String studentId;
-	
 	private String name;
 	private String description;
 	
 	@Transient
 	private ListItemsCrudHelper<StudentGrade> studentGradesCrudHelper;
 	private List<StudentGrade> studentGrades = new ArrayList<StudentGrade>();
-	
-	public String getCourseId() {
-		return this.courseId;
-	}
-	
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
 	
 	public String getStudentId() {
 		return studentId;
@@ -96,8 +82,9 @@ public class StudentRecord implements ListItem {
 		return Collections.unmodifiableList(this.studentGrades);
 	}
 
-	public StudentRecordDTO toStudentRecordDTO() {
+	public StudentRecordDTO toStudentRecordDTO(final StudentRecordIdPath idPath) {
 		StudentRecordDTO recordDTO = new StudentRecordDTO();
+		recordDTO.setIdPath(idPath);
 		BeanUtils.copyProperties(this, recordDTO);
 		return recordDTO;
 	}

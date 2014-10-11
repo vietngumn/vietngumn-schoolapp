@@ -4,20 +4,14 @@ import org.vietngumn.schoolapp.event.DeleteCommand;
 
 public class DeleteStudentRecordCommand extends DeleteCommand {
 
-	private final String courseId;
-	private final String studentId;
+	private StudentRecordIdPath recordIdPath;
 
-	public DeleteStudentRecordCommand(final String courseId, final String studentId) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	public DeleteStudentRecordCommand(final StudentRecordIdPath recordIdPath) {
+		this.recordIdPath = recordIdPath;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public StudentRecordIdPath getRecordIdPath() {
+		return recordIdPath;
 	}
 
-	public String getStudentId() {
-		return studentId;
-	}
-	
 }

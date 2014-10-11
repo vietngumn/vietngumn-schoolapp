@@ -4,30 +4,21 @@ import org.vietngumn.schoolapp.event.DeletedEvent;
 
 public class DeletedStudentRecord extends DeletedEvent {
 
-	private String courseId;
-	private String studentId;
+	private StudentRecordIdPath recordIdPath;
 	private StudentRecordDTO details;
 	
-	private DeletedStudentRecord(String courseId, String studentId) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	private DeletedStudentRecord(final StudentRecordIdPath recordIdPath) {
+		this.recordIdPath = recordIdPath;
 	}
 
-	public DeletedStudentRecord(String courseId, String studentId, StudentRecordDTO details) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	public DeletedStudentRecord(final StudentRecordDTO details) {
 		this.details = details;
-		this.deletionCompleted = true;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public StudentRecordIdPath getRecordIdPath() {
+		return this.recordIdPath;
 	}
 	
-	public String getStudentId() {
-		return studentId;
-	}
-
 	public StudentRecordDTO getDetails() {
 		return details;
 	}
@@ -37,15 +28,15 @@ public class DeletedStudentRecord extends DeletedEvent {
 		return deletionCompleted;
 	}
 
-	public static DeletedStudentRecord deletionForbidden(String courseId, String studentId, StudentRecordDTO details) {
-		DeletedStudentRecord response = new DeletedStudentRecord(courseId, studentId, details);
+	public static DeletedStudentRecord deletionForbidden(final StudentRecordDTO details) {
+		DeletedStudentRecord response = new DeletedStudentRecord(details);
 		response.entityFound = true;
 		response.deletionCompleted = false;
 		return response;
 	}
 
-	public static DeletedStudentRecord notFound(String courseId, String studentId) {
-		DeletedStudentRecord response = new DeletedStudentRecord(courseId, studentId);
+	public static DeletedStudentRecord notFound(final StudentRecordIdPath recordIdPath) {
+		DeletedStudentRecord response = new DeletedStudentRecord(recordIdPath);
 		response.entityFound = false;
 		return response;
 	}

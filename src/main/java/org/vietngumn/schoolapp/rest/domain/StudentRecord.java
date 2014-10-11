@@ -1,29 +1,26 @@
 package org.vietngumn.schoolapp.rest.domain;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.vietngumn.schoolapp.event.studentRecord.StudentRecordDTO;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordIdPath;
+import org.vietngumn.schoolapp.rest.controller.CourseQueriesController;
+import org.vietngumn.schoolapp.rest.controller.CourseWorkCategoryQueriesController;
+import org.vietngumn.schoolapp.rest.controller.StudentRecordQueriesController;
 
 
 @XmlRootElement
 public class StudentRecord extends ResourceSupport implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String courseId;
 	private String studentId;
 	private String name;
 	private String description;
-
-	public String getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
 
 	public String getStudentId() {
 		return studentId;
@@ -49,22 +46,36 @@ public class StudentRecord extends ResourceSupport implements Serializable {
 		this.description = description;
 	}
 
-	public StudentRecordDTO toStudentRecordDTO() {
+	public StudentRecordDTO toStudentRecordDTO(final StudentRecordIdPath idPath) {
 		StudentRecordDTO recordDTO = new StudentRecordDTO();
-		recordDTO.setCourseId(courseId);
-		recordDTO.setStudentId(studentId);
+		recordDTO.setIdPath(idPath);
+		recordDTO.setStudentId(idPath.getStudentId());
 		recordDTO.setName(name);
 		recordDTO.setDescription(description);
 		return recordDTO;
 	}
 
-	public static StudentRecord fromStudentRecordDTO(StudentRecordDTO recordDTO) {
+	public static StudentRecord fromStudentRecordDTO(StudentRecordDTO dto) {
 		StudentRecord record = new StudentRecord();
-		record.setStudentId(recordDTO.getStudentId());
-		record.setName(recordDTO.getName());
-		record.setDescription(recordDTO.getDescription());
-//		courseWork.add(linkTo(OrderQueriesController.class).slash(courseWork.getCourseWorkId()).withSelfRel());
-
+		record.setStudentId(dto.getStudentId());
+		record.setName(dto.getName());
+		record.setDescription(dto.getDescription());
+		
+		StudentRecordIdPath idPath = dto.getIdPath();
+		record.add(linkTo(StudentRecordQueriesController.class, idPath.getCourseId()).slash(idPath.getStudentId()).withSelfRel());
+		record.add(linkTo(CourseQueriesController.class).slash(idPath.getCourseId()).withRel("Course"));
+		record.add(linkTo(CourseWorkCategoryQueriesController.class, idPath.getCourseId()).withRel("StudentGrades"));
+		return record;
+	}
+	
+	public static StudentRecord fromQueriedStudentRecordDTO(StudentRecordDTO dto) {
+		StudentRecord record = new StudentRecord();
+		record.setStudentId(dto.getStudentId());
+		record.setName(dto.getName());
+		record.setDescription(dto.getDescription());
+		
+		StudentRecordIdPath idPath = dto.getIdPath();
+		record.add(linkTo(StudentRecordQueriesController.class, idPath.getCourseId()).slash(idPath.getStudentId()).withSelfRel());
 		return record;
 	}
 }

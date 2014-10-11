@@ -17,6 +17,7 @@ import org.vietngumn.schoolapp.event.studentRecord.CreatedStudentRecord;
 import org.vietngumn.schoolapp.event.studentRecord.DeleteStudentRecordCommand;
 import org.vietngumn.schoolapp.event.studentRecord.DeletedStudentRecord;
 import org.vietngumn.schoolapp.event.studentRecord.StudentRecordDTO;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordIdPath;
 import org.vietngumn.schoolapp.event.studentRecord.UpdateStudentRecordCommand;
 import org.vietngumn.schoolapp.event.studentRecord.UpdatedStudentRecord;
 import org.vietngumn.schoolapp.rest.domain.StudentRecord;
@@ -31,31 +32,32 @@ public class StudentRecordCommandsController {
     @Autowired
     private StudentRecordService studentRecordService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<StudentRecord> createStudentRecord(@PathVariable String courseId, @RequestBody StudentRecord studentRecord, UriComponentsBuilder builder) {
-    	StudentRecordDTO courseDTO = studentRecord.toStudentRecordDTO();
-    	courseDTO.setCourseId(courseId);
+    @RequestMapping(method = RequestMethod.PUT, value = "/{studentId}")
+    public ResponseEntity<StudentRecord> createStudentRecord(@PathVariable String courseId, @PathVariable String studentId, @RequestBody StudentRecord studentRecord, UriComponentsBuilder builder) {
+    	StudentRecordIdPath recordIdPath = new StudentRecordIdPath(courseId, studentId);
+    	StudentRecordDTO recordDTO = studentRecord.toStudentRecordDTO(recordIdPath);
     	
-    	CreateStudentRecordCommand createCommand = new CreateStudentRecordCommand(courseDTO);
+    	CreateStudentRecordCommand createCommand = new CreateStudentRecordCommand(recordDTO);
     	
     	CreatedStudentRecord createdEvent = studentRecordService.createStudentRecord(createCommand);
     	
-    	StudentRecord newRecord = StudentRecord.fromStudentRecordDTO(createdEvent.getDetails());
+    	StudentRecordDTO createdRecordDTO = createdEvent.getDetails();
+    	StudentRecord newRecord = StudentRecord.fromStudentRecordDTO(createdRecordDTO);
         
+    	StudentRecordIdPath newCreatedId = createdRecordDTO.getIdPath();
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
                 builder.path("/aggregators/courses/{courseId}/studentrecords/{studentId}")
-                        .buildAndExpand(courseId, createdEvent.getNewCreatedId().toString()).toUri());
+                        .buildAndExpand(newCreatedId.getCourseId(), newCreatedId.getStudentId()).toUri());
         return new ResponseEntity<StudentRecord>(newRecord, headers, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/{studentId}")
     public ResponseEntity<StudentRecord> updateStudentRecord(@PathVariable String courseId, @PathVariable String studentId, @RequestBody StudentRecord studentRecord) {
-    	StudentRecordDTO recordDTO = studentRecord.toStudentRecordDTO();
-    	recordDTO.setCourseId(courseId);
-    	recordDTO.setStudentId(studentId);
+    	StudentRecordIdPath recordIdPath = new StudentRecordIdPath(courseId, studentId);
+    	StudentRecordDTO recordDTO = studentRecord.toStudentRecordDTO(recordIdPath);
     	
-    	UpdateStudentRecordCommand updateCommand = new UpdateStudentRecordCommand(courseId, studentId, recordDTO);
+    	UpdateStudentRecordCommand updateCommand = new UpdateStudentRecordCommand(recordDTO);
     	
     	UpdatedStudentRecord updatedEvent = studentRecordService.updateStudentRecord(updateCommand);
         if (!updatedEvent.isEntityFound()) {
@@ -72,8 +74,9 @@ public class StudentRecordCommandsController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{studentId}")
     public ResponseEntity<StudentRecord> deleteStudentRecord(@PathVariable String courseId, @PathVariable String studentId) {
-
-    	DeleteStudentRecordCommand deleteCommand = new DeleteStudentRecordCommand(courseId, studentId);
+    	StudentRecordIdPath recordIdPath = new StudentRecordIdPath(courseId, studentId);
+    	DeleteStudentRecordCommand deleteCommand = new DeleteStudentRecordCommand(recordIdPath);
+    	
     	DeletedStudentRecord deletedEvent = studentRecordService.deleteStudentRecord(deleteCommand);
 
         if (!deletedEvent.isEntityFound()) {

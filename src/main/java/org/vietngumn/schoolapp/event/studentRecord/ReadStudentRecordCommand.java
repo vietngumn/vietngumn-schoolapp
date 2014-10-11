@@ -3,19 +3,14 @@ package org.vietngumn.schoolapp.event.studentRecord;
 import org.vietngumn.schoolapp.event.ReadCommand;
 
 public class ReadStudentRecordCommand extends ReadCommand {
-	private String courseId;
-	private String studentId;
+	private StudentRecordIdPath recordIdPath;
 
-	public ReadStudentRecordCommand(String courseId, String studentId) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	public ReadStudentRecordCommand(final StudentRecordIdPath recordIdPath) {
+		this.recordIdPath = recordIdPath;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public StudentRecordIdPath getRecordIdPath() {
+		return this.recordIdPath;
 	}
-
-	public String getStudentId() {
-		return studentId;
-	}
+	
 }

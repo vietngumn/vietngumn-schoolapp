@@ -2,20 +2,19 @@ package org.vietngumn.schoolapp.event.studentRecord;
 
 
 public class StudentRecordDTO {
-
-	private String courseId;
+	private StudentRecordIdPath idPath;
 	private String studentId;
 	private String name;
 	private String description;
 
-	public String getCourseId() {
-		return courseId;
+	public StudentRecordIdPath getIdPath() {
+		return idPath;
 	}
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
+	public void setIdPath(StudentRecordIdPath idPath) {
+		this.idPath = idPath;
 	}
-	
+
 	public String getStudentId() {
 		return studentId;
 	}

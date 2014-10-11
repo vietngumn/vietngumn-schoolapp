@@ -1,12 +1,19 @@
 package org.vietngumn.schoolapp.event.courseWorkCategory;
 
-
 public class CourseWorkCategoryDTO {
 
-	private String courseId;
+	private CourseWorkCategoryIdPath idPath;
 	private String categoryId;
 	private String name;
 	private String description;
+
+	public CourseWorkCategoryIdPath getIdPath() {
+		return idPath;
+	}
+
+	public void setIdPath(CourseWorkCategoryIdPath idPath) {
+		this.idPath = idPath;
+	}
 
 	public String getCategoryId() {
 		return categoryId;
@@ -14,14 +21,6 @@ public class CourseWorkCategoryDTO {
 
 	public void setCategoryId(String categoryId) {
 		this.categoryId = categoryId;
-	}
-
-	public String getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
 	}
 
 	public String getName() {

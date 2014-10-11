@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
+import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryIdPath;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CreateCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CreatedCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.DeleteCourseWorkCategoryCommand;
@@ -33,28 +34,30 @@ public class CourseWorkCategoryCommandsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CourseWorkCategory> createCourseWorkCategory(@PathVariable String courseId, @RequestBody CourseWorkCategory courseWorkCategory, UriComponentsBuilder builder) {
-    	CourseWorkCategoryDTO categoryDTO = courseWorkCategory.toCourseWorkCategoryDTO();
-    	categoryDTO.setCourseId(courseId);
+    	CourseWorkCategoryIdPath categoryIdPath = new CourseWorkCategoryIdPath(courseId, null);
+    	CourseWorkCategoryDTO categoryDTO = courseWorkCategory.toCourseWorkCategoryDTO(categoryIdPath);
     	
     	CreateCourseWorkCategoryCommand createCommand = new CreateCourseWorkCategoryCommand(categoryDTO);
+    	
     	CreatedCourseWorkCategory createdEvent = courseWorkCategoryService.createCourseWorkCategory(createCommand);
     	
-    	CourseWorkCategory newCategory = CourseWorkCategory.fromCourseWorkCategoryDTO(createdEvent.getDetails());
+    	CourseWorkCategoryDTO createdCategoryDTO = createdEvent.getDetails();
+    	CourseWorkCategory newCategory = CourseWorkCategory.fromCourseWorkCategoryDTO(createdCategoryDTO);
         
+    	CourseWorkCategoryIdPath newCreatedId = createdCategoryDTO.getIdPath();
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
                 builder.path("/aggregators/courses/{courseId}/workcategories/{categoryId}")
-                        .buildAndExpand(courseId, createdEvent.getNewCategoryId().toString()).toUri());
+                        .buildAndExpand(newCreatedId.getCourseId(), newCreatedId.getCategoryId()).toUri());
         return new ResponseEntity<CourseWorkCategory>(newCategory, headers, HttpStatus.CREATED);
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/{categoryId}")
     public ResponseEntity<CourseWorkCategory> updateCourseWorkCategory(@PathVariable String courseId, @PathVariable String categoryId, @RequestBody CourseWorkCategory courseWorkCategory) {
-    	CourseWorkCategoryDTO categoryDTO = courseWorkCategory.toCourseWorkCategoryDTO();
-    	categoryDTO.setCourseId(courseId);
-    	categoryDTO.setCategoryId(categoryId);
+    	CourseWorkCategoryIdPath categoryIdPath = new CourseWorkCategoryIdPath(courseId, categoryId);
+    	CourseWorkCategoryDTO categoryDTO = courseWorkCategory.toCourseWorkCategoryDTO(categoryIdPath);
     	
-    	UpdateCourseWorkCategoryCommand updateCommand = new UpdateCourseWorkCategoryCommand(courseId, categoryId, categoryDTO);
+    	UpdateCourseWorkCategoryCommand updateCommand = new UpdateCourseWorkCategoryCommand(categoryDTO);
     	
     	UpdatedCourseWorkCategory updatedEvent = courseWorkCategoryService.updateCourseWorkCategory(updateCommand);
         if (!updatedEvent.isEntityFound()) {
@@ -71,8 +74,9 @@ public class CourseWorkCategoryCommandsController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{categoryId}")
     public ResponseEntity<CourseWorkCategory> deleteCourseWorkCategory(@PathVariable String courseId, @PathVariable String categoryId) {
-
-    	DeleteCourseWorkCategoryCommand deleteCommand = new DeleteCourseWorkCategoryCommand(courseId, categoryId);
+    	CourseWorkCategoryIdPath categoryIdPath = new CourseWorkCategoryIdPath(courseId, categoryId);
+    	DeleteCourseWorkCategoryCommand deleteCommand = new DeleteCourseWorkCategoryCommand(categoryIdPath);
+    	
     	DeletedCourseWorkCategory deletedEvent = courseWorkCategoryService.deleteCourseWorkCategory(deleteCommand);
 
         if (!deletedEvent.isEntityFound()) {

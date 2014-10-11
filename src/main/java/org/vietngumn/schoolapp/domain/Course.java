@@ -80,8 +80,8 @@ public class Course extends AbstractDocument {
 		return getCategoriesListHelper().getItem(categoryId);
 	}
 	
-	public void addCourseWorkCategory(CourseWorkCategory category) {
-		this.getCategoriesListHelper().addItem(category);
+	public CourseWorkCategory addCourseWorkCategory(CourseWorkCategory category) {
+		return this.getCategoriesListHelper().addItem(category);
 	}
 	
 	public CourseWorkCategory updateCourseWorkCategory(CourseWorkCategory category) {
@@ -110,8 +110,8 @@ public class Course extends AbstractDocument {
 		return getRecordsListHelper().getItem(workId);
 	}
 	
-	public void addStudentRecord(StudentRecord record) {
-		this.getRecordsListHelper().addItem(record);
+	public StudentRecord addStudentRecord(StudentRecord record) {
+		return this.getRecordsListHelper().addItem(record);
 	}
 	
 	public StudentRecord updateStudentRecord(StudentRecord record) {
@@ -122,7 +122,7 @@ public class Course extends AbstractDocument {
 		return this.getRecordsListHelper().deleteItem(workId);
 	}
 	
-	public List<StudentRecord> getstudentRecords() {
+	public List<StudentRecord> getStudentRecords() {
 		return Collections.unmodifiableList(this.studentRecords);
 	}
 	

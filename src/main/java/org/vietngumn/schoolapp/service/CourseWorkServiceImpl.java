@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vietngumn.schoolapp.domain.Course;
@@ -27,6 +29,8 @@ import org.vietngumn.schoolapp.repository.CourseRepository;
 @Service
 public class CourseWorkServiceImpl implements CourseWorkService {
 	
+	private static Logger LOG = LoggerFactory.getLogger(CourseWorkServiceImpl.class);
+	
 	private CourseRepository courseRepository;
 	
 	@Autowired
@@ -36,8 +40,8 @@ public class CourseWorkServiceImpl implements CourseWorkService {
 	
 	@Override
 	public CreatedCourseWork createCourseWork(CreateCourseWorkCommand createCommand) {
-		CourseWorkIdPath workIdPath = createCommand.getWorkIdPath();
 		CourseWorkDTO workDTO = createCommand.getDetails();
+		CourseWorkIdPath workIdPath = workDTO.getIdPath();
 		
 		Course course = courseRepository.findByCourseId(workIdPath.getCourseId());
 
@@ -49,11 +53,11 @@ public class CourseWorkServiceImpl implements CourseWorkService {
 		
 		CourseWork addedWork = category.addCourseWork(work);
 		
-		course = courseRepository.save(course);
+		courseRepository.save(course);
 		
 		CourseWorkIdPath newCreatedId = new CourseWorkIdPath(
 				workIdPath.getCourseId(), workIdPath.getCategoryId(), addedWork.getWorkId());
-		return new CreatedCourseWork(newCreatedId, work.toCourseWorkDTO());
+		return new CreatedCourseWork(addedWork.toCourseWorkDTO(newCreatedId));
 	}
 	
 	@Override
@@ -72,31 +76,34 @@ public class CourseWorkServiceImpl implements CourseWorkService {
 			return ReadCourseWork.notFound(workIdPath);
 		}
 		
-		return new ReadCourseWork(workIdPath, work.toCourseWorkDTO());
+		return new ReadCourseWork(work.toCourseWorkDTO(workIdPath));
 	}
 
 	@Override
 	public UpdatedCourseWork updateCourseWork(UpdateCourseWorkCommand updateCommand) {
-		CourseWorkIdPath workIdPath = updateCommand.getWorkIdPath();
 		CourseWorkDTO workDTO = updateCommand.getDetails();
+		CourseWorkIdPath workIdPath = workDTO.getIdPath();
 		
 		Course course = courseRepository.findByCourseId(workIdPath.getCourseId());
-//		if (course == null) {
-//			return CreatedCourseWork.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
-//		}
+		if (course == null) {
+			LOG.debug("Could not find Course with ID [" + workIdPath.getCourseId() + "]");
+		}
 		
 		CourseWorkCategory category = course.getCourseWorkCategory(workIdPath.getCategoryId());
+		if (category == null) {
+			LOG.debug("Could not find Course Work Category with ID [" + workIdPath.getCategoryId() + "]");
+		}
 		
 		CourseWork work = CourseWork.fromCourseWorkDTO(workDTO);
 		
 		CourseWork updatedWork = category.updateCourseWork(work);
-//		if (updatedCategory == null) {
-//		return UpdatedCourseWork.notFound(categoryDTO.getCourseId(), categoryDTO.getCategoryId());
-//	}
+		if (updatedWork == null) {
+			LOG.debug("Could not find Course Work with ID [" + workIdPath.getCategoryId() + "]");
+		}
 		
-		course = courseRepository.save(course);
+		courseRepository.save(course);
 		
-		return new UpdatedCourseWork(workIdPath, updatedWork.toCourseWorkDTO());
+		return new UpdatedCourseWork(updatedWork.toCourseWorkDTO(workIdPath));
 	}
 
 	@Override
@@ -117,24 +124,27 @@ public class CourseWorkServiceImpl implements CourseWorkService {
 		
 		courseRepository.save(course);
 		
-		CourseWorkDTO details = work.toCourseWorkDTO();
-		return new DeletedCourseWork(workIdPath, details);
+		CourseWorkDTO details = work.toCourseWorkDTO(workIdPath);
+		return new DeletedCourseWork(details);
 	}
 	
 	@Override
 	public QueriedWorks queryCourseWorks(QueryWorksCommand queryCommand) {
 		
 		WorkQueryCriteria criteria = queryCommand.getQueryCriteria();
+		String courseId = criteria.getWorkIdPath().getCourseId();
+		String categoryId = criteria.getWorkIdPath().getCategoryId();
 		
 		List<CourseWorkDTO> workDTOs = new ArrayList<CourseWorkDTO>();
 
-		Course course = courseRepository.findByCourseId(criteria.getWorkIdPath().getCourseId());
+		Course course = courseRepository.findByCourseId(courseId);
 		
-		CourseWorkCategory category = course.getCourseWorkCategory(criteria.getWorkIdPath().getCategoryId());
+		CourseWorkCategory category = course.getCourseWorkCategory(categoryId);
 		
 		if (category != null) {
 			for (CourseWork work : category.getCourseWorks()) {
-				workDTOs.add(work.toCourseWorkDTO());
+				CourseWorkIdPath idPath = new CourseWorkIdPath(courseId, categoryId, work.getWorkId());
+				workDTOs.add(work.toCourseWorkDTO(idPath));
 			}
 		}
 		

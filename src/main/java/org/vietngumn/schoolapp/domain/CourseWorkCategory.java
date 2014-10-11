@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
+import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryIdPath;
 import org.vietngumn.schoolapp.helper.ListItem;
 import org.vietngumn.schoolapp.helper.ListItemsCrudHelper;
 
@@ -98,8 +99,9 @@ public class CourseWorkCategory implements ListItem {
 		return Collections.unmodifiableList(this.courseWorks);
 	}
 	
-	public CourseWorkCategoryDTO toCourseWorkCategoryDTO() {
+	public CourseWorkCategoryDTO toCourseWorkCategoryDTO(final CourseWorkCategoryIdPath idPath) {
 		CourseWorkCategoryDTO categoryDTO = new CourseWorkCategoryDTO();
+		categoryDTO.setIdPath(idPath);
 		BeanUtils.copyProperties(this, categoryDTO);
 		return categoryDTO;
 	}

@@ -35,15 +35,16 @@ public class CourseWorkCommandsController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CourseWork> createCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @RequestBody CourseWork courseWork, UriComponentsBuilder builder) {
     	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, null);
-    	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO();
+    	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO(workIdPath);
     	
-    	CreateCourseWorkCommand createCommand = new CreateCourseWorkCommand(workIdPath, workDTO);
+    	CreateCourseWorkCommand createCommand = new CreateCourseWorkCommand(workDTO);
     	
     	CreatedCourseWork createdEvent = courseWorkService.createCourseWork(createCommand);
     	
-    	CourseWork newWork = CourseWork.fromCourseWorkDTO(createdEvent.getDetails());
+    	CourseWorkDTO createdWorkDTO = createdEvent.getDetails();
+    	CourseWork newWork = CourseWork.fromCourseWorkDTO(createdWorkDTO);
         
-    	CourseWorkIdPath newCreatedId = createdEvent.getNewCreatedId();
+    	CourseWorkIdPath newCreatedId = createdWorkDTO.getIdPath();
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
                 builder.path("/aggregators/courses/{courseId}/workcategories/{categoryId}/works/{workId}")
@@ -54,19 +55,18 @@ public class CourseWorkCommandsController {
     @RequestMapping(method = RequestMethod.POST, value = "/{workId}")
     public ResponseEntity<CourseWork> updateCourseWork(@PathVariable String courseId, @PathVariable String categoryId, @PathVariable String workId, @RequestBody CourseWork courseWork) {
     	CourseWorkIdPath workIdPath = new CourseWorkIdPath(courseId, categoryId, workId);
-    	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO();
-    	workDTO.setWorkId(workId);
+    	CourseWorkDTO workDTO = courseWork.toCourseWorkDTO(workIdPath);
     	
-    	UpdateCourseWorkCommand updateCommand = new UpdateCourseWorkCommand(workIdPath, workDTO);
+    	UpdateCourseWorkCommand updateCommand = new UpdateCourseWorkCommand(workDTO);
     	
     	UpdatedCourseWork updatedEvent = courseWorkService.updateCourseWork(updateCommand);
         if (!updatedEvent.isEntityFound()) {
             return new ResponseEntity<CourseWork>(HttpStatus.NOT_FOUND);
         }
 
-        CourseWork updatedCategory = CourseWork.fromCourseWorkDTO(updatedEvent.getDetails());
+        CourseWork updatedWork = CourseWork.fromCourseWorkDTO(updatedEvent.getDetails());
         if (updatedEvent.isUpdateCompleted()) {
-            return new ResponseEntity<CourseWork>(updatedCategory, HttpStatus.OK);
+            return new ResponseEntity<CourseWork>(updatedWork, HttpStatus.OK);
         }
 
         return new ResponseEntity<CourseWork>(courseWork, HttpStatus.FORBIDDEN);

@@ -3,26 +3,23 @@ package org.vietngumn.schoolapp.event.courseWork;
 import org.vietngumn.schoolapp.event.DeletedEvent;
 
 public class DeletedCourseWork extends DeletedEvent {
-
 	private CourseWorkIdPath workIdPath;
 	private CourseWorkDTO details;
 	
-	private DeletedCourseWork(final CourseWorkIdPath workIdPath) {
+	public DeletedCourseWork(final CourseWorkDTO details) {
+		this.details = details;
+	}
+	
+	public DeletedCourseWork(final CourseWorkIdPath workIdPath) {
 		this.workIdPath = workIdPath;
 	}
 
-	public DeletedCourseWork(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
-		this(workIdPath);
-		this.details = details;
-		this.deletionCompleted = true;
+	public CourseWorkDTO getDetails() {
+		return details;
 	}
 
 	public CourseWorkIdPath getWorkIdPath() {
-		return this.workIdPath;
-	}
-	
-	public CourseWorkDTO getDetails() {
-		return details;
+		return workIdPath;
 	}
 
 	@Override
@@ -30,8 +27,8 @@ public class DeletedCourseWork extends DeletedEvent {
 		return deletionCompleted;
 	}
 
-	public static DeletedCourseWork deletionForbidden(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
-		DeletedCourseWork response = new DeletedCourseWork(workIdPath, details);
+	public static DeletedCourseWork deletionForbidden(final CourseWorkDTO details) {
+		DeletedCourseWork response = new DeletedCourseWork(details);
 		response.entityFound = true;
 		response.deletionCompleted = false;
 		return response;

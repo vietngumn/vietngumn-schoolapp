@@ -8,26 +8,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
+import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryIdPath;
 import org.vietngumn.schoolapp.rest.controller.CourseQueriesController;
 import org.vietngumn.schoolapp.rest.controller.CourseWorkCategoryQueriesController;
+import org.vietngumn.schoolapp.rest.controller.CourseWorkQueriesController;
 
 
 @XmlRootElement
 public class CourseWorkCategory extends ResourceSupport implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String courseId;
 	private String categoryId;
 	private String name;
 	private String description;
-
-	public String getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
 
 	public String getCategoryId() {
 		return categoryId;
@@ -53,33 +46,34 @@ public class CourseWorkCategory extends ResourceSupport implements Serializable 
 		this.description = description;
 	}
 
-	public CourseWorkCategoryDTO toCourseWorkCategoryDTO() {
+	public CourseWorkCategoryDTO toCourseWorkCategoryDTO(final CourseWorkCategoryIdPath idPath) {
 		CourseWorkCategoryDTO categoryDTO = new CourseWorkCategoryDTO();
-		categoryDTO.setCourseId(courseId);
-		categoryDTO.setCategoryId(categoryId);
+		categoryDTO.setIdPath(idPath);
+		categoryDTO.setCategoryId(idPath.getCategoryId());
 		categoryDTO.setName(name);
 		categoryDTO.setDescription(description);
 		return categoryDTO;
 	}
 
-	public static CourseWorkCategory fromCourseWorkCategoryDTO(CourseWorkCategoryDTO dto) {
+	public static CourseWorkCategory fromCourseWorkCategoryDTO(final CourseWorkCategoryDTO dto) {
 		CourseWorkCategory workCategory = new CourseWorkCategory();
 		workCategory.setCategoryId(dto.getCategoryId());
 		workCategory.setName(dto.getName());
 		workCategory.setDescription(dto.getDescription());
 		
-		workCategory.add(linkTo(CourseWorkCategoryQueriesController.class, dto.getCourseId()).slash(dto.getCategoryId()).withSelfRel());
-		workCategory.add(linkTo(CourseQueriesController.class).slash(dto.getCourseId()).withRel("Course"));
-		workCategory.add(linkTo(CourseWorkCategoryQueriesController.class, dto.getCourseId()).withRel("CourseWorks"));
+		final CourseWorkCategoryIdPath idPath = dto.getIdPath();
+		workCategory.add(linkTo(CourseWorkCategoryQueriesController.class, idPath.getCourseId()).slash(idPath.getCategoryId()).withSelfRel());
+		workCategory.add(linkTo(CourseQueriesController.class).slash(idPath.getCourseId()).withRel("Course"));
+		workCategory.add(linkTo(CourseWorkQueriesController.class, idPath.getCourseId(), idPath.getCategoryId()).withRel("CourseWorks"));
 		return workCategory;
 	}
 	
-	public static CourseWorkCategory fromQueriedWorkCategoryDTO(CourseWorkCategoryDTO dto) {
+	public static CourseWorkCategory fromQueriedWorkCategoryDTO(final CourseWorkCategoryDTO dto) {
 		CourseWorkCategory workCategory = new CourseWorkCategory();
 		workCategory.setCategoryId(dto.getCategoryId());
 		workCategory.setName(dto.getName());
 		workCategory.setDescription(dto.getDescription());
-		workCategory.add(linkTo(CourseWorkCategoryQueriesController.class, dto.getCourseId()).slash(dto.getCategoryId()).withSelfRel());
+		workCategory.add(linkTo(CourseWorkCategoryQueriesController.class, dto.getIdPath().getCourseId()).slash(dto.getCategoryId()).withSelfRel());
 		return workCategory;
 	}
 }

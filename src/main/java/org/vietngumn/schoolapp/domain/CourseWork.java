@@ -1,38 +1,16 @@
 package org.vietngumn.schoolapp.domain;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.annotation.Transient;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
 import org.vietngumn.schoolapp.helper.ListItem;
 
 public class CourseWork implements ListItem {
 
-	@Transient
-	private String courseId;
-	@Transient
-	private String categoryId;
-	
 	private String workId;
 	private String name;
 	private String description;
 	private Integer weight;
-	
-	public String getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
-
-	public void setCategoryId(String categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public String getCategoryId() {
-		return this.categoryId;
-	}
 	
 	public String getWorkId() {
 		return workId;
@@ -76,9 +54,9 @@ public class CourseWork implements ListItem {
 		return true;
 	}
 
-	public CourseWorkDTO toCourseWorkDTO() {
+	public CourseWorkDTO toCourseWorkDTO(CourseWorkIdPath idPath) {
 		CourseWorkDTO workDTO = new CourseWorkDTO();
-		workDTO.setIdPath(new CourseWorkIdPath(courseId, categoryId, workId));
+		workDTO.setIdPath(idPath);
 		BeanUtils.copyProperties(this, workDTO);
 		return workDTO;
 	}

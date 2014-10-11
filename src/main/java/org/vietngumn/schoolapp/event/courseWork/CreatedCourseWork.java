@@ -4,11 +4,9 @@ import org.vietngumn.schoolapp.event.CreatedEvent;
 
 public class CreatedCourseWork extends CreatedEvent {
 
-	private final CourseWorkIdPath newCreatedId;
 	private final CourseWorkDTO details;
 
-	public CreatedCourseWork(final CourseWorkIdPath newCreatedId, final CourseWorkDTO details) {
-		this.newCreatedId = newCreatedId;
+	public CreatedCourseWork(final CourseWorkDTO details) {
 		this.details = details;
 	}
 
@@ -16,7 +14,4 @@ public class CreatedCourseWork extends CreatedEvent {
 		return details;
 	}
 
-	public CourseWorkIdPath getNewCreatedId() {
-		return newCreatedId;
-	}
 }

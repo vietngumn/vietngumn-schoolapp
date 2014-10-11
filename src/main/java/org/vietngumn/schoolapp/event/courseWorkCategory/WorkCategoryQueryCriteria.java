@@ -3,14 +3,14 @@ package org.vietngumn.schoolapp.event.courseWorkCategory;
 import org.vietngumn.schoolapp.event.QueryCommand;
 
 public class WorkCategoryQueryCriteria extends QueryCommand {
-	private String courseId;
+	private CourseWorkCategoryIdPath categoryIdPath;
 
-	public String getCourseId() {
-		return courseId;
+	public void setCategoryIdPath(CourseWorkCategoryIdPath categoryIdPath) {
+		this.categoryIdPath = categoryIdPath;
 	}
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
+	public CourseWorkCategoryIdPath getCategoryIdPath() {
+		return categoryIdPath;
 	}
 
 }

@@ -3,35 +3,27 @@ package org.vietngumn.schoolapp.event.studentRecord;
 import org.vietngumn.schoolapp.event.ReadEvent;
 
 public class ReadStudentRecord extends ReadEvent {
-	private String courseId;
-	private String studentId;
+	private StudentRecordIdPath recordIdPath;
 	private StudentRecordDTO details;
 
-	private ReadStudentRecord(String courseId, String studentId) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	private ReadStudentRecord(final StudentRecordIdPath recordIdPath) {
+		this.recordIdPath = recordIdPath;
 	}
 
-	public ReadStudentRecord(String courseId, String studentId, StudentRecordDTO details) {
-		this.courseId = courseId;
-		this.studentId = studentId;
+	public ReadStudentRecord(StudentRecordDTO details) {
 		this.details = details;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public StudentRecordIdPath getRecordIdPath() {
+		return this.recordIdPath;
 	}
 	
-	public String getStudentId() {
-		return studentId;
-	}
-
 	public StudentRecordDTO getDetails() {
 		return details;
 	}
 
-	public static ReadStudentRecord notFound(String courseId, String categoryId) {
-		ReadStudentRecord response = new ReadStudentRecord(courseId, categoryId);
+	public static ReadStudentRecord notFound(final StudentRecordIdPath recordIdPath) {
+		ReadStudentRecord response = new ReadStudentRecord(recordIdPath);
 		response.entityFound = false;
 		return response;
 	}

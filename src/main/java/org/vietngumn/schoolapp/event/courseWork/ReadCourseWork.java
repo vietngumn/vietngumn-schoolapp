@@ -10,8 +10,7 @@ public class ReadCourseWork extends ReadEvent {
 		this.workIdPath = workIdPath;
 	}
 
-	public ReadCourseWork(final CourseWorkIdPath workIdPath, final CourseWorkDTO details) {
-		this(workIdPath);
+	public ReadCourseWork(final CourseWorkDTO details) {
 		this.details = details;
 	}
 

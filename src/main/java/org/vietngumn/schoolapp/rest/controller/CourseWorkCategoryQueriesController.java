@@ -14,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.vietngumn.schoolapp.event.course.CourseDTO;
-import org.vietngumn.schoolapp.event.course.QueryCoursesCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryDTO;
+import org.vietngumn.schoolapp.event.courseWorkCategory.CourseWorkCategoryIdPath;
 import org.vietngumn.schoolapp.event.courseWorkCategory.QueriedWorkCategories;
 import org.vietngumn.schoolapp.event.courseWorkCategory.QueryWorkCategoriesCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategory;
 import org.vietngumn.schoolapp.event.courseWorkCategory.ReadCourseWorkCategoryCommand;
 import org.vietngumn.schoolapp.event.courseWorkCategory.WorkCategoryQueryCriteria;
-import org.vietngumn.schoolapp.rest.domain.Course;
 import org.vietngumn.schoolapp.rest.domain.CourseWorkCategory;
 import org.vietngumn.schoolapp.service.CourseWorkCategoryService;
 
@@ -39,8 +37,9 @@ public class CourseWorkCategoryQueriesController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<CourseWorkCategory> getAllCourseWorkCategories(@PathVariable String courseId) {
+    	CourseWorkCategoryIdPath categoryIdPath = new CourseWorkCategoryIdPath(courseId, null);
     	WorkCategoryQueryCriteria queryCriteria = new WorkCategoryQueryCriteria();
-    	queryCriteria.setCourseId(courseId);
+    	queryCriteria.setCategoryIdPath(categoryIdPath);
     	
     	QueriedWorkCategories queriedCategories = workCategoryService.queryCourseWorkCategories(new QueryWorkCategoriesCommand(queryCriteria));
     	
@@ -53,8 +52,10 @@ public class CourseWorkCategoryQueriesController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{categoryId}")
     public ResponseEntity<CourseWorkCategory> readCourseWorkCategory(@PathVariable String courseId, @PathVariable String categoryId) {
-    	ReadCourseWorkCategoryCommand readCommand = new ReadCourseWorkCategoryCommand(courseId, categoryId);
-        ReadCourseWorkCategory response = workCategoryService.readCourseWorkCategory(readCommand);
+    	CourseWorkCategoryIdPath categoryIdPath = new CourseWorkCategoryIdPath(courseId, categoryId);
+    	ReadCourseWorkCategoryCommand readCommand = new ReadCourseWorkCategoryCommand(categoryIdPath);
+       
+    	ReadCourseWorkCategory response = workCategoryService.readCourseWorkCategory(readCommand);
 
         if (!response.isEntityFound()) {
             return new ResponseEntity<CourseWorkCategory>(HttpStatus.NOT_FOUND);
