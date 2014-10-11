@@ -11,10 +11,8 @@ public class DeletedStudentGrade extends DeletedEvent {
 		this.studentGradeId = studentGradeId;
 	}
 
-	public DeletedStudentGrade(final StudentGradeIdPath studentGradeId, final StudentGradeDTO details) {
-		this(studentGradeId);
+	public DeletedStudentGrade(final StudentGradeDTO details) {
 		this.details = details;
-		this.deletionCompleted = true;
 	}
 
 	public StudentGradeIdPath getStudentGradeId() {
@@ -30,8 +28,8 @@ public class DeletedStudentGrade extends DeletedEvent {
 		return deletionCompleted;
 	}
 
-	public static DeletedStudentGrade deletionForbidden(final StudentGradeIdPath studentGradeId, final StudentGradeDTO details) {
-		DeletedStudentGrade response = new DeletedStudentGrade(studentGradeId, details);
+	public static DeletedStudentGrade deletionForbidden(final StudentGradeDTO details) {
+		DeletedStudentGrade response = new DeletedStudentGrade(details);
 		response.entityFound = true;
 		response.deletionCompleted = false;
 		return response;

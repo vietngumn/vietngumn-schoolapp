@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.vietngumn.schoolapp.event.QueriedEvent;
 
-public class QueriedWorks extends QueriedEvent {
+public class QueriedCourseWorks extends QueriedEvent {
 	private final List<CourseWorkDTO> works;
 
-	public QueriedWorks(List<CourseWorkDTO> works) {
+	public QueriedCourseWorks(List<CourseWorkDTO> works) {
 		this.works = Collections.unmodifiableList(works);
 	}
 
-	public List<CourseWorkDTO> getWorks() {
+	public List<CourseWorkDTO> getCourseWorks() {
 		return this.works;
 	}
 	

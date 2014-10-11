@@ -2,6 +2,7 @@ package org.vietngumn.schoolapp.domain;
 
 import org.springframework.beans.BeanUtils;
 import org.vietngumn.schoolapp.event.studentGrade.StudentGradeDTO;
+import org.vietngumn.schoolapp.event.studentGrade.StudentGradeIdPath;
 import org.vietngumn.schoolapp.helper.ListItem;
 
 public class StudentGrade implements ListItem {
@@ -52,8 +53,9 @@ public class StudentGrade implements ListItem {
 		this.comment = comment;
 	}
 
-	public StudentGradeDTO toStudentGradeDTO() {
+	public StudentGradeDTO toStudentGradeDTO(final StudentGradeIdPath idPath) {
 		StudentGradeDTO gradeDTO = new StudentGradeDTO();
+		gradeDTO.setIdPath(idPath);
 		BeanUtils.copyProperties(this, gradeDTO);
 		return gradeDTO;
 	}

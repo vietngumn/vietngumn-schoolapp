@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkDTO;
 import org.vietngumn.schoolapp.event.courseWork.CourseWorkIdPath;
-import org.vietngumn.schoolapp.event.courseWork.QueriedWorks;
-import org.vietngumn.schoolapp.event.courseWork.QueryWorksCommand;
+import org.vietngumn.schoolapp.event.courseWork.QueriedCourseWorks;
+import org.vietngumn.schoolapp.event.courseWork.QueryCourseWorksCommand;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWork;
 import org.vietngumn.schoolapp.event.courseWork.ReadCourseWorkCommand;
 import org.vietngumn.schoolapp.event.courseWork.WorkQueryCriteria;
@@ -40,10 +40,10 @@ public class CourseWorkQueriesController {
     	WorkQueryCriteria queryCriteria = new WorkQueryCriteria();
     	queryCriteria.setWorkIdPath(new CourseWorkIdPath(courseId, categoryId, null));
     	
-    	QueriedWorks queriedWorks = courseWorkService.queryCourseWorks(new QueryWorksCommand(queryCriteria));
+    	QueriedCourseWorks queriedWorks = courseWorkService.queryCourseWorks(new QueryCourseWorksCommand(queryCriteria));
     	
         List<CourseWork> works = new ArrayList<CourseWork>();
-        for (CourseWorkDTO dto : queriedWorks.getWorks()) {
+        for (CourseWorkDTO dto : queriedWorks.getCourseWorks()) {
         	works.add(CourseWork.fromQueriedCourseWorkDTO(dto));
         }
         return works;

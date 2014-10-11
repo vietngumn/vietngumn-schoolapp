@@ -4,6 +4,8 @@ import org.vietngumn.schoolapp.event.studentGrade.CreateStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.CreatedStudentGrade;
 import org.vietngumn.schoolapp.event.studentGrade.DeleteStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.DeletedStudentGrade;
+import org.vietngumn.schoolapp.event.studentGrade.QueriedStudentGrades;
+import org.vietngumn.schoolapp.event.studentGrade.QueryStudentGradesCommand;
 import org.vietngumn.schoolapp.event.studentGrade.ReadStudentGrade;
 import org.vietngumn.schoolapp.event.studentGrade.ReadStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.UpdateStudentGradeCommand;
@@ -19,4 +21,5 @@ public interface StudentGradeService {
 
 	DeletedStudentGrade deleteStudentGrade(DeleteStudentGradeCommand deleteCommand);
 
+	QueriedStudentGrades queryCourseWorks(QueryStudentGradesCommand queryCommand);
 }

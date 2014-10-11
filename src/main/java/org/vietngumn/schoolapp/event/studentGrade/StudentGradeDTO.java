@@ -2,12 +2,20 @@ package org.vietngumn.schoolapp.event.studentGrade;
 
 
 public class StudentGradeDTO {
-
+	private StudentGradeIdPath idPath;
 	private String categoryId;
 	private String workId;
 	private String points;
 	private String comment;
 
+	public StudentGradeIdPath getIdPath() {
+		return idPath;
+	}
+
+	public void setIdPath(StudentGradeIdPath idPath) {
+		this.idPath = idPath;
+	}
+	
 	public String getCategoryId() {
 		return categoryId;
 	}

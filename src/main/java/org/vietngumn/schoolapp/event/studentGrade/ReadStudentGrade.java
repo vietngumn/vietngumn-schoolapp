@@ -10,8 +10,7 @@ public class ReadStudentGrade extends ReadEvent {
 		this.gradeIdPath = gradeIdPath;
 	}
 
-	public ReadStudentGrade(final StudentGradeIdPath gradeIdPath, final StudentGradeDTO details) {
-		this(gradeIdPath);
+	public ReadStudentGrade(final StudentGradeDTO details) {
 		this.details = details;
 	}
 	

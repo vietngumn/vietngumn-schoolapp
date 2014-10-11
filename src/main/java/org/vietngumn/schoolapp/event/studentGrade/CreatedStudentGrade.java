@@ -4,11 +4,9 @@ import org.vietngumn.schoolapp.event.CreatedEvent;
 
 public class CreatedStudentGrade extends CreatedEvent {
 
-	private final StudentGradeIdPath newCreatedId;
 	private final StudentGradeDTO details;
 
-	public CreatedStudentGrade(final StudentGradeIdPath newCreatedId, final StudentGradeDTO details) {
-		this.newCreatedId = newCreatedId;
+	public CreatedStudentGrade(final StudentGradeDTO details) {
 		this.details = details;
 	}
 
@@ -16,7 +14,4 @@ public class CreatedStudentGrade extends CreatedEvent {
 		return details;
 	}
 
-	public StudentGradeIdPath getNewCreatedId() {
-		return newCreatedId;
-	}
 }

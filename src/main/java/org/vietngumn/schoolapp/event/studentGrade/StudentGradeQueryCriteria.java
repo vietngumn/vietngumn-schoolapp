@@ -3,13 +3,14 @@ package org.vietngumn.schoolapp.event.studentGrade;
 import org.vietngumn.schoolapp.event.QueryCommand;
 
 public class StudentGradeQueryCriteria extends QueryCommand {
-	private String schoolYearId;
+	private StudentGradeIdPath idPath;
 
-	public void setSchoolYearId(String schoolYearId) {
-		this.schoolYearId = schoolYearId;
+	public StudentGradeIdPath getStudentGradeIdPath() {
+		return idPath;
 	}
 
-	public String getSchoolYearId() {
-		return schoolYearId;
+	public void setStudentGradeIdPath(StudentGradeIdPath idPath) {
+		this.idPath = idPath;
 	}
+
 }

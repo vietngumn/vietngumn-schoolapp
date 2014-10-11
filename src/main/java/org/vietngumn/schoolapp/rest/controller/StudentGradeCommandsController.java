@@ -32,18 +32,19 @@ public class StudentGradeCommandsController {
     @Autowired
     private StudentGradeService studentGradeService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<StudentGrade> createStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @RequestBody StudentGrade studentGrade, UriComponentsBuilder builder) {
-    	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, null, null);
-    	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO();
+    @RequestMapping(method = RequestMethod.PUT, value = "/categories/{categoryId}/works/{workId}")
+    public ResponseEntity<StudentGrade> createStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @PathVariable String categoryId, @PathVariable String workId, @RequestBody StudentGrade studentGrade, UriComponentsBuilder builder) {
+    	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
+    	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO(gradeIdPath);
     	
-    	CreateStudentGradeCommand createCommand = new CreateStudentGradeCommand(gradeIdPath, gradeDTO);
+    	CreateStudentGradeCommand createCommand = new CreateStudentGradeCommand(gradeDTO);
     	
     	CreatedStudentGrade createdEvent = studentGradeService.createStudentGrade(createCommand);
     	
-    	StudentGrade newGrade = StudentGrade.fromStudentGradeDTO(createdEvent.getDetails());
+    	StudentGradeDTO createdGradeDTO = createdEvent.getDetails();
+    	StudentGrade newGrade = StudentGrade.fromStudentGradeDTO(createdGradeDTO);
         
-    	StudentGradeIdPath newCreatedId = createdEvent.getNewCreatedId();
+    	StudentGradeIdPath newCreatedId = createdGradeDTO.getIdPath();
     	HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
                 builder.path("/aggregators/courses/{courseId}/studentrecords/{studentId}/grades/categories/{categoryId}/works/{workId}")
@@ -54,11 +55,9 @@ public class StudentGradeCommandsController {
     @RequestMapping(method = RequestMethod.POST, value = "/categories/{categoryId}/works/{workId}")
     public ResponseEntity<StudentGrade> updateStudentGrade(@PathVariable String courseId, @PathVariable String studentId, @PathVariable String categoryId, @PathVariable String workId, @RequestBody StudentGrade studentGrade) {
     	StudentGradeIdPath gradeIdPath = new StudentGradeIdPath(courseId, studentId, categoryId, workId);
-    	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO();
-    	gradeDTO.setCategoryId(categoryId);
-		gradeDTO.setWorkId(workId);
+    	StudentGradeDTO gradeDTO = studentGrade.toStudentGradeDTO(gradeIdPath);
 		
-    	UpdateStudentGradeCommand updateCommand = new UpdateStudentGradeCommand(gradeIdPath, gradeDTO);
+    	UpdateStudentGradeCommand updateCommand = new UpdateStudentGradeCommand(gradeDTO);
     	
     	UpdatedStudentGrade updatedEvent = studentGradeService.updateStudentGrade(updateCommand);
         if (!updatedEvent.isEntityFound()) {

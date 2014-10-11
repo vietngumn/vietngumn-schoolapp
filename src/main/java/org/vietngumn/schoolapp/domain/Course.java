@@ -106,8 +106,8 @@ public class Course extends AbstractDocument {
 		return this.recordsListHelper;
 	}
 	
-	public StudentRecord getStudentRecord(String workId) {
-		return getRecordsListHelper().getItem(workId);
+	public StudentRecord getStudentRecord(String studentId) {
+		return getRecordsListHelper().getItem(studentId);
 	}
 	
 	public StudentRecord addStudentRecord(StudentRecord record) {
@@ -118,8 +118,8 @@ public class Course extends AbstractDocument {
 		return this.getRecordsListHelper().replaceItem(record);
 	}
 	
-	public StudentRecord deleteStudentRecord(String workId) {
-		return this.getRecordsListHelper().deleteItem(workId);
+	public StudentRecord deleteStudentRecord(String studentId) {
+		return this.getRecordsListHelper().deleteItem(studentId);
 	}
 	
 	public List<StudentRecord> getStudentRecords() {

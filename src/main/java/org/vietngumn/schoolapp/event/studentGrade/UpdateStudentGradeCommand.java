@@ -4,16 +4,10 @@ import org.vietngumn.schoolapp.event.UpdateCommand;
 
 public class UpdateStudentGradeCommand extends UpdateCommand {
 
-	private StudentGradeIdPath gradeIdPath;
 	private StudentGradeDTO details;
 
-	public UpdateStudentGradeCommand(final StudentGradeIdPath gradeIdPath, final StudentGradeDTO details) {
-		this.gradeIdPath = gradeIdPath;
+	public UpdateStudentGradeCommand(final StudentGradeDTO details) {
 		this.details = details;
-	}
-
-	public StudentGradeIdPath getGradeIdPath() {
-		return gradeIdPath;
 	}
 
 	public StudentGradeDTO getDetails() {

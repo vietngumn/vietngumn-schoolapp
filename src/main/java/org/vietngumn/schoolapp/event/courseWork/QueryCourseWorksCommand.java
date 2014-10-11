@@ -2,10 +2,10 @@ package org.vietngumn.schoolapp.event.courseWork;
 
 import org.vietngumn.schoolapp.event.QueryCommand;
 
-public class QueryWorksCommand extends QueryCommand {
+public class QueryCourseWorksCommand extends QueryCommand {
 	private WorkQueryCriteria criteria;
 
-	public QueryWorksCommand(WorkQueryCriteria criteria) {
+	public QueryCourseWorksCommand(WorkQueryCriteria criteria) {
 		this.criteria = criteria;
 	}
 
