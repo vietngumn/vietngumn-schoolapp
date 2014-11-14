@@ -96,6 +96,10 @@ public class Course extends AbstractDocument {
 		return Collections.unmodifiableList(this.courseWorkCategories);
 	}
 	
+	public List<CourseWorkCategory> getCourseWorkCategories(List<String> categoryIds) {
+		return Collections.unmodifiableList(this.getCategoriesListHelper().getItemsByIds(categoryIds));
+	}
+	
 	private ListItemsCrudHelper<StudentRecord> getRecordsListHelper() {
 		if (this.recordsListHelper == null) {
 			if (this.studentRecords == null) {
@@ -124,6 +128,10 @@ public class Course extends AbstractDocument {
 	
 	public List<StudentRecord> getStudentRecords() {
 		return Collections.unmodifiableList(this.studentRecords);
+	}
+	
+	public List<StudentRecord> getStudentRecords(List<String> recordIds) {
+		return Collections.unmodifiableList(this.getRecordsListHelper().getItemsByIds(recordIds));
 	}
 	
 	public CourseDTO toCourseDTO() {

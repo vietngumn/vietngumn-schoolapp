@@ -5,6 +5,7 @@ public class StudentGradeDTO {
 	private StudentGradeIdPath idPath;
 	private String categoryId;
 	private String workId;
+	private String workName;
 	private String points;
 	private String comment;
 
@@ -30,6 +31,14 @@ public class StudentGradeDTO {
 
 	public void setWorkId(String workId) {
 		this.workId = workId;
+	}
+
+	public String getWorkName() {
+		return workName;
+	}
+
+	public void setWorkName(String workName) {
+		this.workName = workName;
 	}
 
 	public String getPoints() {

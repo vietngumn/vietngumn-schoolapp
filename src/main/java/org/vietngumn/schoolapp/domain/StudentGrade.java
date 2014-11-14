@@ -11,6 +11,15 @@ public class StudentGrade implements ListItem {
 	private String workId;
 	private String points;
 	private String comment;
+	
+	public StudentGrade() {
+		
+	}
+	
+	public StudentGrade(String categoryId, String workId) {
+		this.categoryId = categoryId;
+		this.workId = workId;
+	}
 
 	@Override
 	public String getListItemId() {

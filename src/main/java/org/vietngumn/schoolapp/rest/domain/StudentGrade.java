@@ -26,6 +26,8 @@ public class StudentGrade extends ResourceSupport implements Serializable {
 	private String workId;
 	private String points;
 	private String comment;
+	private String columnName;
+	private String columnSpace;
 
 	public String getCategoryId() {
 		return categoryId;
@@ -57,6 +59,22 @@ public class StudentGrade extends ResourceSupport implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+
+	public String getColumnSpace() {
+		return columnSpace;
+	}
+
+	public void setColumnSpace(String columnSpace) {
+		this.columnSpace = columnSpace;
 	}
 
 	public StudentGradeDTO toStudentGradeDTO(final StudentGradeIdPath idPath) {

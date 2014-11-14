@@ -65,12 +65,12 @@ public class StudentRecord implements ListItem {
 		return getStudentGradesCrudHelper().getItem(itemId);
 	}
 	
-	public StudentGrade addStudentGrade(StudentGrade work) {
-		return this.getStudentGradesCrudHelper().addItem(work);
+	public StudentGrade addStudentGrade(StudentGrade grade) {
+		return this.getStudentGradesCrudHelper().addItem(grade);
 	}
 	
-	public StudentGrade updateStudentGrade(StudentGrade work) {
-		return this.getStudentGradesCrudHelper().replaceItem(work);
+	public StudentGrade updateStudentGrade(StudentGrade grade) {
+		return this.getStudentGradesCrudHelper().replaceItem(grade);
 	}
 	
 	public StudentGrade deleteStudentGrade(final String categoryId, final String workId) {
@@ -81,7 +81,11 @@ public class StudentRecord implements ListItem {
 	public List<StudentGrade> getStudentGrades() {
 		return Collections.unmodifiableList(this.studentGrades);
 	}
-
+	
+//	public List<StudentGrade> getStudentRecordsByIds(List<String> recordIds) {
+//		return Collections.unmodifiableList(this.getStudentGradesCrudHelper().getItemsByIds(recordIds));
+//	}
+	
 	public StudentRecordDTO toStudentRecordDTO(final StudentRecordIdPath idPath) {
 		StudentRecordDTO recordDTO = new StudentRecordDTO();
 		recordDTO.setIdPath(idPath);

@@ -1,5 +1,6 @@
 package org.vietngumn.schoolapp.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListItemsCrudHelper<T extends ListItem> {
@@ -51,6 +52,20 @@ public class ListItemsCrudHelper<T extends ListItem> {
 			this.sourceItems.remove(itemToBeDeleted);
 		}
 		return itemToBeDeleted;
+	}
+	
+	public List<T> getItemsByIds(List<String> itemIds) {
+		if (itemIds == null) {
+			return this.sourceItems;
+		}
+		
+		List<T> filteredItems = new ArrayList<T>();
+		for (T item : this.sourceItems) {
+			if (itemIds.contains(item.getListItemId())) {
+				filteredItems.add(item);
+			}
+		}
+		return filteredItems;
 	}
 	
 }

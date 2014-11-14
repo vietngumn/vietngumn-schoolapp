@@ -99,6 +99,21 @@ public class CourseWorkCategory implements ListItem {
 		return Collections.unmodifiableList(this.courseWorks);
 	}
 	
+	public List<CourseWork> getCourseWorks(List<String> workIds, List<String> schoolDateIds) {
+		List<CourseWork> filteredByIdWorks = this.getCourseWorksCrudHelper().getItemsByIds(workIds);
+		if (schoolDateIds == null) {
+			return Collections.unmodifiableList(filteredByIdWorks);
+		}
+		
+		List<CourseWork> filteredWorks = new ArrayList<CourseWork>();
+		for (CourseWork work : filteredByIdWorks) {
+			if (work.getSchoolDateId() == null || schoolDateIds.contains(work.getSchoolDateId())) {
+				filteredWorks.add(work);
+			}
+		}
+		return Collections.unmodifiableList(filteredWorks);
+	}
+	
 	public CourseWorkCategoryDTO toCourseWorkCategoryDTO(final CourseWorkCategoryIdPath idPath) {
 		CourseWorkCategoryDTO categoryDTO = new CourseWorkCategoryDTO();
 		categoryDTO.setIdPath(idPath);

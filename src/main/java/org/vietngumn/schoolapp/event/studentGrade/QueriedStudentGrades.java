@@ -4,16 +4,17 @@ import java.util.Collections;
 import java.util.List;
 
 import org.vietngumn.schoolapp.event.QueriedEvent;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordDTO;
 
 public class QueriedStudentGrades extends QueriedEvent {
-	private final List<StudentGradeDTO> grades;
+	private final List<StudentRecordDTO> recordGrades;
 
-	public QueriedStudentGrades(List<StudentGradeDTO> grades) {
-		this.grades = Collections.unmodifiableList(grades);
+	public QueriedStudentGrades(List<StudentRecordDTO> recordGrades) {
+		this.recordGrades = Collections.unmodifiableList(recordGrades);
 	}
 
-	public List<StudentGradeDTO> getStudentGrades() {
-		return this.grades;
+	public List<StudentRecordDTO> getStudentRecordGrades() {
+		return this.recordGrades;
 	}
 	
 }

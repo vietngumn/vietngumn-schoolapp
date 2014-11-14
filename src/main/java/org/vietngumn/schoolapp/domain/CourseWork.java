@@ -9,6 +9,7 @@ public class CourseWork implements ListItem {
 
 	private String workId;
 	private String name;
+	private String schoolDateId;
 	private String description;
 	private Integer weight;
 	
@@ -41,6 +42,14 @@ public class CourseWork implements ListItem {
 		this.description = description;
 	}
 
+	public String getSchoolDateId() {
+		return schoolDateId;
+	}
+
+	public void setSchoolDateId(String schoolDateId) {
+		this.schoolDateId = schoolDateId;
+	}
+
 	public Integer getWeight() {
 		return weight;
 	}
@@ -48,7 +57,6 @@ public class CourseWork implements ListItem {
 	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
-
 	
 	public boolean canBeDeleted() {
 		return true;

@@ -1,13 +1,17 @@
 package org.vietngumn.schoolapp.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vietngumn.schoolapp.domain.Course;
+import org.vietngumn.schoolapp.domain.CourseWork;
+import org.vietngumn.schoolapp.domain.CourseWorkCategory;
 import org.vietngumn.schoolapp.domain.StudentGrade;
 import org.vietngumn.schoolapp.domain.StudentRecord;
 import org.vietngumn.schoolapp.event.studentGrade.CreateStudentGradeCommand;
@@ -16,6 +20,8 @@ import org.vietngumn.schoolapp.event.studentGrade.DeleteStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.DeletedStudentGrade;
 import org.vietngumn.schoolapp.event.studentGrade.QueriedStudentGrades;
 import org.vietngumn.schoolapp.event.studentGrade.QueryStudentGradesCommand;
+import org.vietngumn.schoolapp.event.studentGrade.ReadAllStudentGrades;
+import org.vietngumn.schoolapp.event.studentGrade.ReadAllStudentGradesCommand;
 import org.vietngumn.schoolapp.event.studentGrade.ReadStudentGrade;
 import org.vietngumn.schoolapp.event.studentGrade.ReadStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.StudentGradeDTO;
@@ -23,6 +29,8 @@ import org.vietngumn.schoolapp.event.studentGrade.StudentGradeIdPath;
 import org.vietngumn.schoolapp.event.studentGrade.StudentGradeQueryCriteria;
 import org.vietngumn.schoolapp.event.studentGrade.UpdateStudentGradeCommand;
 import org.vietngumn.schoolapp.event.studentGrade.UpdatedStudentGrade;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordDTO;
+import org.vietngumn.schoolapp.event.studentRecord.StudentRecordIdPath;
 import org.vietngumn.schoolapp.repository.CourseRepository;
 
 @Service
@@ -136,11 +144,11 @@ public class StudentGradeServiceImpl implements StudentGradeService {
 	}
 	
 	@Override
-	public QueriedStudentGrades queryCourseWorks(QueryStudentGradesCommand queryCommand) {
+	public ReadAllStudentGrades readAllStudentGrades(ReadAllStudentGradesCommand readAllCommand) {
 		
-		StudentGradeQueryCriteria criteria = queryCommand.getQueryCriteria();
-		String courseId = criteria.getStudentGradeIdPath().getCourseId();
-		String studentId = criteria.getStudentGradeIdPath().getStudentId();
+		StudentGradeIdPath gradeIdPath = readAllCommand.getGradeIdPath();
+		String courseId = gradeIdPath.getCourseId();
+		String studentId = gradeIdPath.getStudentId();
 		
 		List<StudentGradeDTO> gradeDTOs = new ArrayList<StudentGradeDTO>();
 
@@ -155,6 +163,45 @@ public class StudentGradeServiceImpl implements StudentGradeService {
 			}
 		}
 		
-		return new QueriedStudentGrades(gradeDTOs);
+		return new ReadAllStudentGrades(gradeDTOs);
 	}
+	
+	@Override
+	public QueriedStudentGrades queryStudentGrades(QueryStudentGradesCommand queryCommand) {
+		StudentGradeQueryCriteria criteria = queryCommand.getQueryCriteria();
+		String courseId = criteria.getCourseId();
+		
+		Course course = courseRepository.findByCourseId(courseId);
+		List<StudentRecord> records = course.getStudentRecords();
+		List<CourseWorkCategory> categories = course.getCourseWorkCategories(criteria.getWorkCategoryIds());
+		
+		Map<String, StudentRecordDTO> recordsMap = new HashMap<String, StudentRecordDTO>();
+		
+		for (CourseWorkCategory category : categories) {
+			List<CourseWork> works = category.getCourseWorks(criteria.getCourseWorkIds(), criteria.getSchoolDateIds());
+			for (CourseWork work : works) {
+				for (StudentRecord record : records) {
+					StudentRecordDTO recordDTO = recordsMap.get(record.getStudentId());
+					if (recordDTO == null) {
+						StudentRecordIdPath recordIdPath = new StudentRecordIdPath(courseId, record.getStudentId());
+						recordDTO = record.toStudentRecordDTO(recordIdPath);
+						recordsMap.put(record.getStudentId(), recordDTO);
+					}
+					
+					StudentGrade grade = record.getStudentGrade(category.getCategoryId(), work.getWorkId());
+					if (grade == null) {
+						grade = new StudentGrade(category.getCategoryId(), work.getWorkId());
+					}
+					StudentGradeIdPath idPath = new StudentGradeIdPath(courseId, record.getStudentId(), grade.getCategoryId(), grade.getWorkId());
+					StudentGradeDTO gradeDTO = grade.toStudentGradeDTO(idPath);
+					gradeDTO.setWorkName(work.getName());
+					recordDTO.addStudentGrade(gradeDTO);
+				}
+			}
+		}
+		
+		List<StudentRecordDTO> studentRecordDTOs = new ArrayList<StudentRecordDTO>(recordsMap.values());
+		return new QueriedStudentGrades(studentRecordDTOs);
+	}
+	
 }
